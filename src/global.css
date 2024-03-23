@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  background-color: black;
+}
+
+#default-modal {
+  background-color: black;
+}
+
+#auth-form{
+  position: fixed;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    padding: 20px;
+  
+}
+
+
+#auth-form form {
+  background-color: transparent;
+  border: 2px solid #f96d00;
+  
+  box-shadow: rgba(152, 99, 30, 0.844) 0px 10px 20px, rgba(233, 165, 109, 0.923) 0px 6px 6px;
+}
+
+
+
+
+#auth-form form input:focus {
+  border-color: #f96d00;
+  
+}
