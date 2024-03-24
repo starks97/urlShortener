@@ -47,6 +47,8 @@ export default function RefreshForm() {
     mutation.mutate();
   };
 
+  console.log(useStore(store!, (state) => state.access_token));
+
   return (
     <Card className="max-w-sm">
       {mutation.error?.toString() && (

@@ -12,3 +12,11 @@ export type UrlResponse = {
   status: string;
   message?: string;
 };
+
+export interface RedirectResponse {
+  data: {
+    original_url: string;
+  };
+  status: string;
+  message?: string;
+}

@@ -1,9 +1,9 @@
 import { baseUrl } from "../../consts";
 import { ProfileResponse } from "./interfaces";
 
-export default async function Me() {
+export default async function Profile() {
   try {
-    const res = await fetch(`${baseUrl}/api/auth/me`, {
+    const res = await fetch(`${baseUrl}/api/users/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

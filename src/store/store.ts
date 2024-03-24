@@ -14,22 +14,32 @@ export type AuthState = {
 export const useAuthStore = createStore<AuthState>((set) => ({
   access_token: Cookies.get(ACCESS_TOKEN),
   refresh_token: Cookies.get(REFRESH_TOKEN),
-  setAccesToken: (accessToken: string | undefined) =>
-    set((state) => ({
-      ...state,
-      access_token: !state.access_token
-        ? Cookies.set(ACCESS_TOKEN, accessToken!, { expires: 1 / 24 })
-        : Cookies.get(ACCESS_TOKEN),
-    })),
-  setRefreshToken: (refreshToken: string | undefined) =>
-    set((state) => ({
-      ...state,
-      refresh_token: !state.refresh_token
-        ? Cookies.set(REFRESH_TOKEN, refreshToken!, {
-            secure: true,
-            expires: 7,
-            sameSite: "none",
-          })
-        : Cookies.get(REFRESH_TOKEN),
-    })),
+  setAccesToken: (newAccessToken: string | undefined) =>
+    set((state) => {
+      if (newAccessToken) {
+        Cookies.set(ACCESS_TOKEN, newAccessToken, { expires: 1 / 24 });
+      } else {
+        Cookies.remove(ACCESS_TOKEN);
+      }
+      return {
+        ...state,
+        access_token: newAccessToken,
+      };
+    }),
+  setRefreshToken: (newRefreshToken: string | undefined) =>
+    set((state) => {
+      if (newRefreshToken) {
+        Cookies.set(REFRESH_TOKEN, newRefreshToken, {
+          secure: true,
+          expires: 7,
+          sameSite: "none",
+        });
+      } else {
+        Cookies.remove(REFRESH_TOKEN);
+      }
+      return {
+        ...state,
+        refresh_token: newRefreshToken,
+      };
+    }),
 }));

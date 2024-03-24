@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ProfileImport } from './routes/profile'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthRegisterImport } from './routes/auth/register'
@@ -18,6 +19,11 @@ import { Route as AuthRefreshImport } from './routes/auth/refresh'
 import { Route as AuthLoginImport } from './routes/auth/login'
 
 // Create/Update Routes
+
+const ProfileRoute = ProfileImport.update({
+  path: '/profile',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const DashboardRoute = DashboardImport.update({
   path: '/dashboard',
@@ -56,6 +62,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardImport
       parentRoute: typeof rootRoute
     }
+    '/profile': {
+      preLoaderRoute: typeof ProfileImport
+      parentRoute: typeof rootRoute
+    }
     '/auth/login': {
       preLoaderRoute: typeof AuthLoginImport
       parentRoute: typeof rootRoute
@@ -76,6 +86,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
   DashboardRoute,
+  ProfileRoute,
   AuthLoginRoute,
   AuthRefreshRoute,
   AuthRegisterRoute,

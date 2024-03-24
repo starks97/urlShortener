@@ -14,6 +14,13 @@
   background-color: black;
 }
 
+#modal-body {
+  background-color: rgba(0,0,0,0.95);
+  border: 2px solid #f96d00;
+  box-shadow: rgba(152, 99, 30, 0.844) 0px 10px 20px, rgba(233, 165, 109, 0.923) 0px 6px 6px;
+  border-radius: 0.5rem;
+}
+
 #auth-form{
   position: fixed;
     transform: translate(-50%, -50%);
@@ -23,19 +30,17 @@
     padding: 20px;
   
 }
-
-
 #auth-form form {
   background-color: transparent;
   border: 2px solid #f96d00;
-  
   box-shadow: rgba(152, 99, 30, 0.844) 0px 10px 20px, rgba(233, 165, 109, 0.923) 0px 6px 6px;
 }
-
-
-
-
 #auth-form form input:focus {
   border-color: #f96d00;
   
+}
+
+#url-card{
+  border: 2px solid #f96d00;
+  background-color: rgba(0,0,0,0.75);
 }

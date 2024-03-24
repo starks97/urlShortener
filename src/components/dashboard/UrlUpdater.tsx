@@ -48,7 +48,11 @@ export default function UrlUpdater({ ...props }: UrlUpdaterProps) {
                   ></path>
                 </svg>
               </button>
-              <span className="text-gray-600 text-lg">{props.data}</span>
+              <span className="text-gray-600 text-lg line-clamp-1">
+                {props.data.length > 30
+                  ? `${props.data.slice(0, 40)}...`
+                  : props.data}
+              </span>
             </div>
           </div>
 

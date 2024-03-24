@@ -1,4 +1,5 @@
 import { baseUrl } from "../../consts";
+import { RedirectResponse } from "./interfaces";
 
 export default async function redirectUrl(shortUrl: string) {
   try {
@@ -10,7 +11,7 @@ export default async function redirectUrl(shortUrl: string) {
       credentials: "include",
     });
 
-    const data = await res.json();
+    const data = (await res.json()) as RedirectResponse;
 
     if (!res.ok) {
       throw new Error(data.message!!);
