@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-const CreateUrlSchema = z.object({
-  url: z.string().url().optional().or(z.literal("")),
+export const CreateUrlSchema = z.object({
+  original_url: z.string().url(),
   short_url: z
     .string({
       description: "short url must be provide, please provide at lease a name",
     })
     .min(5)
-    .max(10),
+    .max(30),
 });
 
 export type CreateUrlSchemaType = z.infer<typeof CreateUrlSchema>;

@@ -44,3 +44,8 @@
   border: 2px solid #f96d00;
   background-color: rgba(0,0,0,0.75);
 }
+
+#createUrl-form form{
+  background-color: transparent;
+  border: none
+}

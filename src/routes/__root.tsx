@@ -28,11 +28,11 @@ export const Route = createRootRouteWithContext<Context>()({
 function RootComponent() {
   return (
     <>
-      <Menu>
+      {/*<Menu>
         <Link to="/">Home</Link>
         <Link to="/dashboard">Dashboard</Link>
         <Link to="/profile">Profile</Link>
-      </Menu>
+  </Menu>*/}
       <Outlet />
       <ReactQueryDevtools buttonPosition="bottom-left" />
       <TanStackRouterDevtools position="bottom-right" />

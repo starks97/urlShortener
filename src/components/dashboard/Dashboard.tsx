@@ -2,6 +2,7 @@ import UrlCard from "./UrlCard";
 import { DateConverter } from "../../utils";
 
 import { DashboardProps } from "./interfaces";
+import SideMenu from "./SideMenu";
 
 export default function DashboardMain({
   urls,
@@ -10,6 +11,8 @@ export default function DashboardMain({
 }) {
   return (
     <div>
+      <SideMenu />
+
       <div className="p-4 sm:ml-64">
         <div className="p-4 rounded-lg min-h-[calc(100vh-3.5rem)]">
           <div className="grid gid-cols-1 md:grid-cols-3 gap-5 justify-items-center w-full">

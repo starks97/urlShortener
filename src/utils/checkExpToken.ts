@@ -6,7 +6,7 @@ type CustomJwtPayload = {
   jwtPayload: JwtPayload;
 };
 
-export const checkExpToken = (token: string): CustomJwtPayload => {
+export const checkExpJsonWebToken = (token: string): CustomJwtPayload => {
   try {
     if (!token) {
       return {
@@ -42,3 +42,28 @@ export const checkExpToken = (token: string): CustomJwtPayload => {
     };
   }
 };
+
+/*export function checkExpRefreshToken(expiration: number): ExpirationPayload {
+  try {
+    const currentTime = new Date().getTime();
+
+    const expirationTimestamp = currentTime + expiration;
+
+    if (currentTime > expirationTimestamp) {
+      return {
+        status: false,
+        message: "Token expired",
+      };
+    }
+
+    return {
+      status: true,
+      message: "Token valid",
+    };
+  } catch (e) {
+    return {
+      status: false,
+      message: "Error in token validation",
+    };
+  }
+}*/

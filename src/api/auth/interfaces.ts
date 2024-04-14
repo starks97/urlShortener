@@ -22,21 +22,20 @@ export interface LoginProperties {
 }
 
 export interface LoginResponse {
-  data: {
-    access_token: string;
-    refresh_token: string;
-  };
+  access_token: string;
   status: string;
   message?: string;
 }
 
 export interface ProfileResponse {
   data: {
-    id: string;
-    name: string;
-    email: string;
-    createdAt: string;
-    updatedAt: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      createdAt: string;
+      updatedAt: string;
+    };
   };
   status: string;
   message?: string;

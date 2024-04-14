@@ -6,12 +6,13 @@ import { Button } from "flowbite-react";
 
 import DashModal from "./DashModal";
 
-import { redirectUrl, type RedirectResponse } from "../../api/url";
-
-import { useMutation } from "@tanstack/react-query";
+import { baseUrl } from "../../consts";
+import ShareButton from "../ShareButton";
 
 const UrlCard: React.FC<UrlCardProps> = ({ ...props }) => {
   const [openModal, setOpenModal] = useState(false);
+
+  const redirect = import.meta.env.VITE_REDIRECT_SHORT_URL;
 
   const urlData = useMemo(
     () => ({
@@ -25,24 +26,9 @@ const UrlCard: React.FC<UrlCardProps> = ({ ...props }) => {
     [props]
   );
 
-  const mutation = useMutation<RedirectResponse>({
-    mutationFn: async () => {
-      try {
-        const data = await redirectUrl(props.short_url);
-        return data as RedirectResponse;
-      } catch (error) {
-        if (error instanceof Error) {
-          throw error.message;
-        }
-
-        throw "An error occurred. Please try again.";
-      }
-    },
-
-    onSuccess: (data) => {
-      window.open(data.data.original_url, "_blank");
-    },
-  });
+  const handleRedirect = () => {
+    window.open(`${redirect}${props.short_url}`, "_blank");
+  };
 
   return (
     <>
@@ -52,7 +38,7 @@ const UrlCard: React.FC<UrlCardProps> = ({ ...props }) => {
       >
         <button
           className="inline-flex font-medium items-center text-yellow-600 hover:underline text-lg"
-          onClick={() => mutation.mutate()}
+          onClick={() => handleRedirect()}
         >
           {props.short_url}
           <svg
@@ -71,6 +57,10 @@ const UrlCard: React.FC<UrlCardProps> = ({ ...props }) => {
             ></path>
           </svg>
         </button>
+        <ShareButton
+          shortUrl={`${baseUrl}/api/url/redirect/${props.short_url}`}
+          title={props.short_url}
+        />
         <div className="mt-5 w-full flex items-center justify-center">
           <Button
             className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"

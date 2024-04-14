@@ -1,29 +1,32 @@
-import { useContext } from "react";
-
 import { Button, Card } from "flowbite-react";
 
-import { Refresh, ResfreshResponse } from "../../api/auth";
+import { ResfreshResponse } from "../../api/auth";
 
 import { useMutation } from "@tanstack/react-query";
 
 import { useNavigate } from "@tanstack/react-router";
 
-import { AuthContext } from "../../context";
+import { baseUrl } from "../../consts";
 
-import { useStore } from "zustand";
+import {
+  GetHttpRequestStrategy,
+  HttpRequestContext,
+} from "../../api/handlerMethod";
 
 export default function RefreshForm() {
-  const store = useContext(AuthContext);
-
-  const accessToken = useStore(store!, (state) => state.setAccesToken);
-
   const navigate = useNavigate();
+
+  const RefreshStrategy = new GetHttpRequestStrategy();
+  const RefreshContext = new HttpRequestContext(RefreshStrategy);
 
   const mutation = useMutation<ResfreshResponse>({
     mutationFn: async (): Promise<ResfreshResponse> => {
       try {
-        const data = await Refresh();
-        return data as ResfreshResponse;
+        const refresh = await RefreshContext.executeRequest<ResfreshResponse>(
+          `${baseUrl}/auth/refresh`
+        );
+
+        return refresh as ResfreshResponse;
       } catch (error) {
         if (error instanceof Error) {
           throw error.message;
@@ -34,8 +37,8 @@ export default function RefreshForm() {
     },
 
     onSuccess: (data) => {
-      accessToken(data.access_token);
       navigate({ to: "/dashboard" });
+      return;
     },
 
     onError: (data) => {
@@ -46,8 +49,6 @@ export default function RefreshForm() {
   const handleRefresh = () => {
     mutation.mutate();
   };
-
-  console.log(useStore(store!, (state) => state.access_token));
 
   return (
     <Card className="max-w-sm">

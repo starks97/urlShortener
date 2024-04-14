@@ -6,12 +6,17 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { type SubmitHandler } from "react-hook-form";
 
-import { Login, type LoginResponse } from "../../api";
+import { type LoginResponse } from "../../api";
 
 import {
   type LoginUserSchemaType,
   LoginUserSchema,
 } from "../../models/auth.models";
+
+import {
+  PostHttpRequestStrategy,
+  HttpRequestContext,
+} from "../../api/handlerMethod";
 
 import { AuthContext } from "../../context";
 
@@ -21,12 +26,17 @@ import { LoginFormField } from "./consts";
 
 import Form from "../Form";
 
+import { baseUrl } from "../../consts";
+
 export default function LoginForm() {
-  const store = useContext(AuthContext);
+  const authStore = useContext(AuthContext);
+  const LoginStrategy = new PostHttpRequestStrategy();
+  const LoginContext = new HttpRequestContext(LoginStrategy);
 
-  const refreshToken = useStore(store!, (state) => state.setRefreshToken);
-
-  const accessToken = useStore(store!, (state) => state.setAccesToken);
+  const setServiceToken = useStore(
+    authStore!,
+    (state) => state.setServiceToken
+  );
 
   const navigate = useNavigate();
 
@@ -38,9 +48,11 @@ export default function LoginForm() {
   >({
     mutationFn: async ({ email, password }) => {
       try {
-        const data = await Login(email, password);
-
-        return data;
+        const login = await LoginContext.executeRequest<LoginResponse>(
+          `${baseUrl}/auth/login`,
+          { email, password }
+        );
+        return login as LoginResponse;
       } catch (error) {
         if (error instanceof Error) {
           throw error.message;
@@ -50,10 +62,8 @@ export default function LoginForm() {
     },
 
     onSuccess: (data) => {
-      accessToken(data?.data.access_token!);
-
-      refreshToken(data?.data.refresh_token!);
-
+      console.log(data);
+      setServiceToken("true");
       navigate({ to: "/dashboard" });
     },
   });
