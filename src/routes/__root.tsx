@@ -11,14 +11,14 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { useAuthStore } from "../store";
 
-import { allUrls } from "../api";
+import { getAllUrl } from "../api";
 
 import Menu from "../components/Menu";
 
 interface Context {
   queryClient: QueryClient;
   auth: typeof useAuthStore;
-  urls: typeof allUrls;
+  urls: typeof getAllUrl;
 }
 
 export const Route = createRootRouteWithContext<Context>()({

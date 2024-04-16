@@ -1,30 +1,18 @@
 import { Button, Card } from "flowbite-react";
 
-import { ResfreshResponse } from "../../api/auth";
-
 import { useMutation } from "@tanstack/react-query";
 
 import { useNavigate } from "@tanstack/react-router";
 
-import { baseUrl } from "../../consts";
-
-import {
-  GetHttpRequestStrategy,
-  HttpRequestContext,
-} from "../../api/handlerMethod";
+import { refreshRequest, ResfreshResponse } from "../../api";
 
 export default function RefreshForm() {
   const navigate = useNavigate();
 
-  const RefreshStrategy = new GetHttpRequestStrategy();
-  const RefreshContext = new HttpRequestContext(RefreshStrategy);
-
   const mutation = useMutation<ResfreshResponse>({
     mutationFn: async (): Promise<ResfreshResponse> => {
       try {
-        const refresh = await RefreshContext.executeRequest<ResfreshResponse>(
-          `${baseUrl}/auth/refresh`
-        );
+        const refresh = await refreshRequest();
 
         return refresh as ResfreshResponse;
       } catch (error) {

@@ -4,11 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { type SubmitHandler } from "react-hook-form";
 
-import {
-  PostHttpRequestStrategy,
-  HttpRequestContext,
-  type RegisterResponse,
-} from "../../api";
+import { registerRequest, RegisterResponse } from "../../api";
 
 import {
   RegisterUserSchema,
@@ -18,13 +14,9 @@ import {
 import { RegisterFormField } from "./consts";
 
 import Form from "../Form";
-import { baseUrl } from "../../consts";
 
 export default function RegisterForm() {
   const navigate = useNavigate();
-
-  const Register = new PostHttpRequestStrategy();
-  const RegisterContext = new HttpRequestContext(Register);
 
   const mutation = useMutation<
     RegisterResponse,
@@ -38,10 +30,7 @@ export default function RegisterForm() {
       password,
     }): Promise<RegisterResponse> => {
       try {
-        const register = await RegisterContext.executeRequest<RegisterResponse>(
-          `${baseUrl}/auth/register`,
-          { name, email, password }
-        );
+        const register = await registerRequest(name, email, password);
 
         return register as RegisterResponse;
       } catch (error) {

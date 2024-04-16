@@ -1,9 +1,3 @@
-export interface RegisterProperties {
-  name: string;
-  email: string;
-  password: string;
-}
-
 export interface RegisterResponse {
   data: {
     id: string;
@@ -14,11 +8,6 @@ export interface RegisterResponse {
   };
   status: string;
   message?: string;
-}
-
-export interface LoginProperties {
-  email: string;
-  password: string;
 }
 
 export interface LoginResponse {

@@ -10,6 +10,8 @@ import { AuthContextProvider, useAuth } from "./context";
 
 import { useAuthStore } from "./store";
 
+import { getAllUrl } from "./api";
+
 const queryClient = new QueryClient();
 
 const router = createRouter({
@@ -17,6 +19,7 @@ const router = createRouter({
   context: {
     queryClient,
     auth: useAuthStore,
+    urls: getAllUrl,
   },
   defaultPreload: "intent",
   defaultPreloadStaleTime: 0,

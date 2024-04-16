@@ -6,17 +6,10 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { type SubmitHandler } from "react-hook-form";
 
-import { type LoginResponse } from "../../api";
-
 import {
   type LoginUserSchemaType,
   LoginUserSchema,
 } from "../../models/auth.models";
-
-import {
-  PostHttpRequestStrategy,
-  HttpRequestContext,
-} from "../../api/handlerMethod";
 
 import { AuthContext } from "../../context";
 
@@ -24,14 +17,12 @@ import { useStore } from "zustand";
 
 import { LoginFormField } from "./consts";
 
-import Form from "../Form";
+import { loginRequest, LoginResponse } from "../../api";
 
-import { baseUrl } from "../../consts";
+import Form from "../Form";
 
 export default function LoginForm() {
   const authStore = useContext(AuthContext);
-  const LoginStrategy = new PostHttpRequestStrategy();
-  const LoginContext = new HttpRequestContext(LoginStrategy);
 
   const setServiceToken = useStore(
     authStore!,
@@ -48,10 +39,8 @@ export default function LoginForm() {
   >({
     mutationFn: async ({ email, password }) => {
       try {
-        const login = await LoginContext.executeRequest<LoginResponse>(
-          `${baseUrl}/auth/login`,
-          { email, password }
-        );
+        const login = await loginRequest(email, password);
+
         return login as LoginResponse;
       } catch (error) {
         if (error instanceof Error) {

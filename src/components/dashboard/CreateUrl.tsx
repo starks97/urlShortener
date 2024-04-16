@@ -13,18 +13,10 @@ import {
 
 import { CreateShortUrlField } from "./consts";
 
-import { baseUrl } from "../../consts";
-
-import {
-  PostHttpRequestStrategy,
-  HttpRequestContext,
-} from "../../api/handlerMethod";
+import { createShortUrl } from "../../api";
 
 export default function UrlCreator() {
   const query = useQueryClient();
-
-  const CreateUrlStrategy = new PostHttpRequestStrategy();
-  const CreateUrlContext = new HttpRequestContext(CreateUrlStrategy);
 
   const mutation = useMutation<
     CreateUrlResponse,
@@ -34,13 +26,9 @@ export default function UrlCreator() {
   >({
     mutationFn: async ({ original_url, short_url }) => {
       try {
-        const createUrlResponse =
-          await CreateUrlContext.executeRequest<CreateUrlResponse>(
-            `${baseUrl}/url`,
-            { original_url, short_url }
-          );
+        const response = await createShortUrl(original_url, short_url);
 
-        return createUrlResponse as CreateUrlResponse;
+        return response as CreateUrlResponse;
       } catch (error) {
         if (error instanceof Error) {
           throw error.message;
