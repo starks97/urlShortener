@@ -20,8 +20,16 @@ export default function DashModal({ ...props }: DashModalProps) {
           </Modal.Header>
 
           <Modal.Body>
-            <UrlUpdater data={props.data.short_url} label="short_url" />
-            <UrlUpdater data={props.data.original_url} label="original_url" />
+            <UrlUpdater
+              data={props.data.short_url}
+              id={props.data.url_id}
+              label="short_url"
+            />
+            <UrlUpdater
+              data={props.data.original_url}
+              id={props.data.url_id}
+              label="original_url"
+            />
             <div className="flex flex-row w-full mt-4">
               <span className="text-gray-200 w-1/4">Views</span>
               <p className="text-gray-200">{props.data.views}</p>

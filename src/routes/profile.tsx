@@ -15,15 +15,8 @@ const ProfileQueryOptions = queryOptions({
 
 export const Route = createFileRoute("/profile")({
   beforeLoad: async ({ context, location }) => {
-    try {
-      customMiddleware(context, location);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw redirect(error as { to: string; search: { redirect: string } });
-    }
-    await context.queryClient.prefetchQuery(ProfileQueryOptions);
+    customMiddleware(context, location);
+    return await context.queryClient.prefetchQuery(ProfileQueryOptions);
   },
   loader: async ({ context }) => {
     const profile =

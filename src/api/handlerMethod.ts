@@ -1,7 +1,7 @@
 type ApiResponse<T> = T | Error;
 
 interface HttpRequestStrategy {
-  execute<T>(url: string, data?: object): Promise<ApiResponse<T>>;
+  execute<T>(url: string, data?: any): Promise<ApiResponse<T>>;
 }
 
 export class GetHttpRequestStrategy implements HttpRequestStrategy {
@@ -25,13 +25,13 @@ export class GetHttpRequestStrategy implements HttpRequestStrategy {
       return dat as T;
     } catch (error) {
       console.error(error);
-      return error as Error;
+      throw error as Error;
     }
   }
 }
 
 export class PostHttpRequestStrategy implements HttpRequestStrategy {
-  async execute<T>(url: string, data: object): Promise<ApiResponse<T>> {
+  async execute<T>(url: string, data: any): Promise<ApiResponse<T>> {
     try {
       const res = await fetch(url, {
         method: "POST",
@@ -52,7 +52,7 @@ export class PostHttpRequestStrategy implements HttpRequestStrategy {
       return dat as T;
     } catch (error) {
       console.error(error);
-      return error as Error;
+      throw error as Error;
     }
   }
 }
@@ -79,7 +79,7 @@ export class PatchHttpRequestStrategy implements HttpRequestStrategy {
       return dat as T;
     } catch (error) {
       console.error(error);
-      return error as Error;
+      throw error as Error;
     }
   }
 }
@@ -105,7 +105,7 @@ export class DeleteHttpRequestStrategy implements HttpRequestStrategy {
       return dat as T;
     } catch (error) {
       console.error(error);
-      return error as Error;
+      throw error as Error;
     }
   }
 }
@@ -117,7 +117,7 @@ export class HttpRequestContext {
     this.strategy = strategy;
   }
 
-  async executeRequest<T>(url: string, data?: object): Promise<ApiResponse<T>> {
+  async executeRequest<T>(url: string, data?: any): Promise<ApiResponse<T>> {
     return this.strategy.execute(url, data);
   }
 }

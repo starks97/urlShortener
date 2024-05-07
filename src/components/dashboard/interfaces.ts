@@ -24,4 +24,5 @@ export type UrlUpdaterOptionsType = "original_url" | "short_url";
 export interface UrlUpdaterProps {
   label: UrlUpdaterOptionsType;
   data: string;
+  id: string;
 }

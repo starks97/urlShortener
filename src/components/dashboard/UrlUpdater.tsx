@@ -2,16 +2,71 @@ import { useState } from "react";
 
 import { UrlUpdaterProps } from "./interfaces";
 
+import { updateShortUrl, UpdateUrlResponse } from "../../api";
+
+import {
+  UpdateUrlSchema,
+  type UpdateUrlSchemaType,
+} from "../../models/url.models";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { type SubmitHandler, useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+
 export default function UrlUpdater({ ...props }: UrlUpdaterProps) {
+  const query = useQueryClient();
+
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUrl, setEditedUrl] = useState<string>("");
 
-  const toggleEdit = () => {
-    setIsEditing(!isEditing);
-    setEditedUrl(props.data);
-  };
+  const [inputValue, setInputValue] = useState(props.data);
 
-  const saveEdit = () => {
+  console.log(inputValue);
+
+  const mutation = useMutation<
+    UpdateUrlResponse,
+    unknown,
+    { original_url?: string; short_url?: string },
+    unknown
+  >({
+    mutationFn: async ({ original_url, short_url }) => {
+      try {
+        const update = await updateShortUrl(
+          props.id,
+          original_url!,
+          short_url!
+        );
+
+        return update as UpdateUrlResponse;
+      } catch (error) {
+        if (error instanceof Error) {
+          throw error.message;
+        }
+        throw "An error occurred during updating the url.";
+      }
+    },
+    onSuccess: (data) => {
+      setIsEditing(false);
+      if (props.label === "short_url") {
+        setInputValue(data.data.short_url);
+      } else {
+        setInputValue(data.data.original_url);
+      }
+    },
+    onSettled: async () => {
+      return await query.invalidateQueries({ queryKey: ["urls"] });
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UpdateUrlSchemaType>({ resolver: zodResolver(UpdateUrlSchema) });
+
+  const onSubmit: SubmitHandler<UpdateUrlSchemaType> = (data) => {
+    mutation.mutate(data);
     setIsEditing(false);
   };
 
@@ -27,7 +82,7 @@ export default function UrlUpdater({ ...props }: UrlUpdaterProps) {
             <div className="flex flex-row align-start">
               <button
                 className="text-blue-500 hover:underline"
-                onClick={toggleEdit}
+                onClick={() => setIsEditing(true)}
               >
                 <svg
                   className="w-6 h-6 text-gray-200 dark:text-white"
@@ -57,23 +112,69 @@ export default function UrlUpdater({ ...props }: UrlUpdaterProps) {
           </div>
 
           {/* Display the input field for editing */}
-          <div
+          <form
             className="mb-4 flex items-center justify-start w-full"
             style={{ display: isEditing ? "flex" : "none" }}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <input
               type="text"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              value={editedUrl}
-              onChange={(e) => setEditedUrl(e.target.value)}
+              defaultValue={inputValue}
+              {...register(
+                props.label === "short_url" ? "short_url" : "original_url"
+              )}
             />
+            {errors[
+              props.label === "short_url" ? "short_url" : "original_url"
+            ] && (
+              <span className="text-red-500">
+                {
+                  errors[
+                    props.label === "short_url" ? "short_url" : "original_url"
+                  ]?.message
+                }
+              </span>
+            )}
             <button
-              className="ml-2 bg-blue-500 text-white px-4 py-2 rounded"
-              onClick={saveEdit}
+              className="ml-2 bg-orange-400 text-white px-2 py-2 rounded"
+              type="submit"
             >
-              Save
+              <svg
+                className="w-6 h-6 text-gray-200 "
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 11.917 9.724 16.5 19 7.5"
+                />
+              </svg>
             </button>
-          </div>
+            <button
+              className="ml-2 bg-orange-400 text-white px-2 py-2 rounded"
+              onClick={() => setIsEditing(false)}
+            >
+              <svg
+                className="w-6 h-6 text-gray-200 "
+                xmlns="http://www.w3.org/2000/svg"
+                x="0px"
+                y="0px"
+                width="100"
+                height="100"
+                viewBox="0 0 50 50"
+              >
+                <path d="M 7.71875 6.28125 L 6.28125 7.71875 L 23.5625 25 L 6.28125 42.28125 L 7.71875 43.71875 L 25 26.4375 L 42.28125 43.71875 L 43.71875 42.28125 L 26.4375 25 L 43.71875 7.71875 L 42.28125 6.28125 L 25 23.5625 Z"></path>
+              </svg>
+            </button>
+          </form>
         </div>
       </div>
     </div>

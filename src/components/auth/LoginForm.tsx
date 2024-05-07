@@ -51,7 +51,6 @@ export default function LoginForm() {
     },
 
     onSuccess: (data) => {
-      console.log(data);
       setServiceToken("true");
       navigate({ to: "/dashboard" });
     },
@@ -77,7 +76,7 @@ export default function LoginForm() {
         <Form
           formSchema={LoginFormField}
           onSubmit={onSubmit}
-          submitButtonText="Register"
+          submitButtonText="Login"
           validationSchema={LoginUserSchema}
         >
           {mutation.error?.toString() && (

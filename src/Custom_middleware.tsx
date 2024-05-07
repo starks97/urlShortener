@@ -10,6 +10,7 @@ interface Context {
 
 export function customMiddleware(context: Context, location: ParsedLocation) {
   const serviceToken = context.auth.getState().serviceToken;
+
   const loggedInCookie = Cookies.get("logged_in");
 
   if (!serviceToken && !loggedInCookie) {
@@ -27,4 +28,6 @@ export function customMiddleware(context: Context, location: ParsedLocation) {
       },
     });
   }
+
+  return true;
 }

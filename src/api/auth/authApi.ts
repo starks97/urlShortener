@@ -26,10 +26,13 @@ export const profileContext = new HttpRequestContext(profile);
 export const refreshContext = new HttpRequestContext(refresh);
 
 export async function loginRequest(email: string, password: string) {
-  return loginContext.executeRequest<LoginResponse>(`${baseUrl}/auth/login`, {
-    email,
-    password,
-  });
+  return await loginContext.executeRequest<LoginResponse>(
+    `${baseUrl}/auth/login`,
+    {
+      email,
+      password,
+    }
+  );
 }
 
 export async function registerRequest(

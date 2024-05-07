@@ -1,4 +1,9 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  redirect,
+} from "@tanstack/react-router";
 
 import { queryOptions } from "@tanstack/react-query";
 
@@ -6,25 +11,20 @@ import { DashboardMain } from "../../components/dashboard";
 
 import { getAllUrl, type UrlResponse } from "../../api";
 
+import { SideMenu } from "../../components/dashboard";
+
 const urlsQueryOptions = queryOptions({
   queryKey: ["urls"],
-  queryFn: () => getAllUrl(10, 0),
+  queryFn: () => getAllUrl(15, 0),
 });
 
 import { customMiddleware } from "../../Custom_middleware";
 
 export const Route = createFileRoute("/dashboard/")({
   beforeLoad: async ({ context, location }) => {
-    try {
-      customMiddleware(context, location);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw redirect(error as { to: string; search: { redirect: string } });
-    }
+    customMiddleware(context, location);
 
-    await context.queryClient.prefetchQuery(urlsQueryOptions);
+    return await context.queryClient.prefetchQuery(urlsQueryOptions);
   },
 
   loader: async ({ context }) => {
@@ -44,8 +44,12 @@ function Dashboard() {
 
   return (
     <>
-      <DashboardMain urls={urls!} />
-      <Outlet />
+      <div className="p-4 sm:ml-64">
+        <div className="p-4 rounded-lg min-h-[calc(100vh-3.5rem)]">
+          <DashboardMain urls={urls!} />
+          <Outlet />
+        </div>
+      </div>
     </>
   );
 }

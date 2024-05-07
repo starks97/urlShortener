@@ -14,9 +14,14 @@ import {
 import { CreateShortUrlField } from "./consts";
 
 import { createShortUrl } from "../../api";
+import { useNavigate } from "@tanstack/react-router";
+
+import toast from "react-hot-toast";
 
 export default function UrlCreator() {
   const query = useQueryClient();
+
+  const navigate = useNavigate();
 
   const mutation = useMutation<
     CreateUrlResponse,
@@ -38,9 +43,14 @@ export default function UrlCreator() {
     },
     onSuccess: (data) => {
       console.log(data);
+
+      navigate({ to: "/dashboard" });
+
+      toast.success("Short url created successfully.");
     },
     onError: (error) => {
       console.log(error);
+      toast.error("An error occurred during creation of short url.");
     },
     onSettled: async () => {
       return await query.invalidateQueries({ queryKey: ["urls"] });
@@ -48,19 +58,12 @@ export default function UrlCreator() {
   });
 
   const onSubmit: SubmitHandler<CreateUrlSchemaType> = (data) => {
-    try {
-      mutation.mutate(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error.message;
-      }
-      throw "An error occurred during creation of short url.";
-    }
+    mutation.mutate(data);
   };
 
   return (
     <>
-      <div id="auth-form">
+      <div id="auth-form" className=" max-w-md ">
         <Form
           formSchema={CreateShortUrlField}
           submitButtonText="Create Short Url"

@@ -26,7 +26,6 @@ export default function RefreshForm() {
 
     onSuccess: (data) => {
       navigate({ to: "/dashboard" });
-      return;
     },
 
     onError: (data) => {

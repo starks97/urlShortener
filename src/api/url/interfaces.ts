@@ -34,3 +34,17 @@ export interface CreateUrlResponse {
     updated_at: string;
   };
 }
+
+export interface UpdateUrlResponse {
+  status: string;
+  message?: string;
+  data: {
+    id: string;
+    original_url: string;
+    short_url: string;
+    user_id: string;
+    views: number;
+    created_at: string;
+    updated_at: string;
+  };
+}
