@@ -31,19 +31,86 @@
   
 }
 #auth-form form {
-  background-color: transparent;
-  border: 2px solid #f96d00;
-  box-shadow: rgba(152, 99, 30, 0.844) 0px 10px 20px, rgba(233, 165, 109, 0.923) 0px 6px 6px;
+  position: relative;
+  border: 2px solid transparent;
+  background: linear-gradient(71deg, #080509, #1a171c, #080509);
+  background-clip: padding-box;
+  img {
+    margin-bottom: 32px;
+  }
+}
+
+#auth-form form::after {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  right: -1px;
+  content: "";
+  z-index: -1;
+  border-radius: 0.5rem;
+
+}
+
+#auth-form form::after{
+  background: linear-gradient(71deg, #110e0e, rgba(224,97,39,0.8590029761904762) 51%, #110e0e);
+
 }
 #auth-form form input:focus {
   border-color: #f96d00;
   
 }
 
-#url-card{
-  border: 2px solid #f96d00;
-  background-color: rgba(0,0,0,0.75);
+/*
+buttons
+*/
+         
+.btn-grad {
+  background-image: linear-gradient(71deg, #080509, #1a171c, #080509);
+  padding: 10px;
+  text-align: center;
+  background-size: 200% auto;
+  color: orange;            
+  border-radius: 10px;
+  border: 0.07rem solid 	#FF8C00;
 }
+.btn-grad:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+
+#card{
+  position: relative;
+  border: 2px solid transparent;
+  background: linear-gradient(71deg, #080509, #1a171c, #080509);
+  background-clip: padding-box;
+  img {
+    margin-bottom: 32px;
+  }
+}
+
+.bg-yellow-box{
+  position: relative;
+}
+
+.bg-yellow-box::after {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  right: -1px;
+  content: "";
+  z-index: -1;
+  border-radius: 0.5rem;
+}
+
+.bg-yellow-box::after {
+  background: linear-gradient(71deg, #110e0e, rgba(224,97,39,0.8590029761904762) 51%, #110e0e);
+}
+
+
 
 #createUrl-form form{
   background-color: transparent;

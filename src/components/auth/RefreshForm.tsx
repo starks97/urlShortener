@@ -38,7 +38,7 @@ export default function RefreshForm() {
   };
 
   return (
-    <Card className="max-w-sm">
+    <Card id="auth-form" className="max-w-sm">
       {mutation.error?.toString() && (
         <p className="text-red-500">{mutation.error.toString()}</p>
       )}

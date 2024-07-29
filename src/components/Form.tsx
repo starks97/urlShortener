@@ -68,14 +68,9 @@ const Form: React.FC<FormProps<any>> = ({
           )}
         </div>
       ))}
-      <Button
-        outline
-        gradientDuoTone="redToYellow"
-        type="submit"
-        className="my-5"
-      >
+      <button type="submit" className="btn-grad my-5">
         {submitButtonText}
-      </Button>
+      </button>
     </form>
   );
 };

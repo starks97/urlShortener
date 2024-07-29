@@ -1,14 +1,31 @@
-export type UrlResponse = {
+export type UrlsResponse = {
   data: {
-    created_at: string;
+    createdAt: string;
     original_url: string;
     short_url: string;
-    updated_at: string;
-    url_id: string;
+    updatedAt: string;
+    id: string;
+    category: string;
     user_id: string;
     username: string;
     views: number;
   }[];
+  status: string;
+  message?: string;
+};
+
+export type UrlResponse = {
+  data: {
+    createdAt: string;
+    original_url: string;
+    short_url: string;
+    updatedAt: string;
+    id: string;
+    category: string;
+    user_id: string;
+    username: string;
+    views: number;
+  };
   status: string;
   message?: string;
 };
@@ -27,6 +44,7 @@ export interface CreateUrlResponse {
   data: {
     id: string;
     original_url: string;
+    category: string;
     short_url: string;
     user_id: string;
     views: number;
@@ -41,10 +59,23 @@ export interface UpdateUrlResponse {
   data: {
     id: string;
     original_url: string;
+    category: string;
     short_url: string;
     user_id: string;
     views: number;
     created_at: string;
     updated_at: string;
   };
+}
+
+export enum UrlCategory {
+  All = "All",
+  Tech = "Tech",
+  News = "News",
+  Music = "Music",
+  Sports = "Sports",
+  Gaming = "Gaming",
+  Movies = "Movies",
+  Education = "Education",
+  Science = "Science",
 }

@@ -1,16 +1,17 @@
-import { UrlResponse } from "../../api";
+import { UrlsResponse } from "../../api";
 
 export interface DashboardProps {
-  urls: UrlResponse;
+  urls: UrlsResponse;
 }
 
 export interface UrlCardProps {
-  created_at: string;
+  createdAt: string;
   original_url: string;
   short_url: string;
-  updated_at: string;
-  url_id: string;
+  updatedAt: string;
+  id: string;
   views: number;
+  category: string;
 }
 
 export interface DashModalProps {
@@ -19,7 +20,7 @@ export interface DashModalProps {
   data: UrlCardProps;
 }
 
-export type UrlUpdaterOptionsType = "original_url" | "short_url";
+export type UrlUpdaterOptionsType = "original_url" | "short_url" | "category";
 
 export interface UrlUpdaterProps {
   label: UrlUpdaterOptionsType;

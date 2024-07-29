@@ -1,15 +1,26 @@
 import { Modal } from "flowbite-react";
 
 import { DashModalProps } from "./interfaces";
+
+import { useNavigate } from "@tanstack/react-router";
+
 import UrlUpdater from "./UrlUpdater";
 
+import { DateConverter } from "../../utils";
+
 export default function DashModal({ ...props }: DashModalProps) {
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    false;
+    navigate({ to: "/dashboard", replace: true });
+  };
   return (
     <>
       <Modal
         dismissible
         show={props.openModal}
-        onClose={() => props.setOpenModal(false)}
+        onClose={handleClose}
         id="default-modal"
       >
         <div id="modal-body">
@@ -22,13 +33,19 @@ export default function DashModal({ ...props }: DashModalProps) {
           <Modal.Body>
             <UrlUpdater
               data={props.data.short_url}
-              id={props.data.url_id}
+              id={props.data.id}
               label="short_url"
             />
             <UrlUpdater
               data={props.data.original_url}
-              id={props.data.url_id}
+              id={props.data.id}
               label="original_url"
+            />
+
+            <UrlUpdater
+              data={props.data.category}
+              id={props.data.id}
+              label="category"
             />
             <div className="flex flex-row w-full mt-4">
               <span className="text-gray-200 w-1/4">Views</span>
@@ -36,11 +53,15 @@ export default function DashModal({ ...props }: DashModalProps) {
             </div>
             <div className="flex flex-row w-full mt-4">
               <span className="text-gray-200 w-1/4">Created:</span>
-              <p className="text-gray-200">{props.data.created_at}</p>
+              <p className="text-gray-200">
+                {DateConverter.formatDateFromString(props.data.createdAt)}
+              </p>
             </div>
             <div className="flex flex-row w-full mt-4">
               <span className="text-gray-200 w-1/4">Updated</span>
-              <p className="text-gray-200">{props.data.updated_at}</p>
+              <p className="text-gray-200">
+                {DateConverter.formatDateFromString(props.data.updatedAt)}
+              </p>
             </div>
           </Modal.Body>
           <Modal.Footer>

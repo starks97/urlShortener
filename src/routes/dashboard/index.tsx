@@ -1,17 +1,10 @@
-import {
-  createFileRoute,
-  Link,
-  Outlet,
-  redirect,
-} from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 import { queryOptions } from "@tanstack/react-query";
 
 import { DashboardMain } from "../../components/dashboard";
 
-import { getAllUrl, type UrlResponse } from "../../api";
-
-import { SideMenu } from "../../components/dashboard";
+import { getAllUrl, type UrlsResponse } from "../../api";
 
 const urlsQueryOptions = queryOptions({
   queryKey: ["urls"],
@@ -23,8 +16,6 @@ import { customMiddleware } from "../../Custom_middleware";
 export const Route = createFileRoute("/dashboard/")({
   beforeLoad: async ({ context, location }) => {
     customMiddleware(context, location);
-
-    return await context.queryClient.prefetchQuery(urlsQueryOptions);
   },
 
   loader: async ({ context }) => {
@@ -40,7 +31,7 @@ export const Route = createFileRoute("/dashboard/")({
 });
 
 function Dashboard() {
-  const { urls }: { urls: UrlResponse } = Route.useLoaderData();
+  const { urls }: { urls: UrlsResponse } = Route.useLoaderData();
 
   return (
     <>

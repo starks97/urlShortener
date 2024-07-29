@@ -1,20 +1,18 @@
 import { z } from "zod";
+import { UrlCategory } from "../api";
 
 export const CreateUrlSchema = z.object({
-  original_url: z.string().url().optional(),
+  original_url: z.string().url(),
   short_url: z
     .string({
       description: "short url must be provide, please provide at lease a name",
     })
     .min(5)
-    .max(30)
-    .optional(),
+    .max(30),
+  category: z.nativeEnum(UrlCategory),
 });
 
-export const UpdateUrlSchema = CreateUrlSchema.pick({
-  original_url: true,
-  short_url: true,
-});
+export const UpdateUrlSchema = CreateUrlSchema.partial();
 
 export type UpdateUrlSchemaType = z.infer<typeof UpdateUrlSchema>;
 

@@ -16,6 +16,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as DashboardIndexImport } from './routes/dashboard/index'
 import { Route as DashboardUpdateurlImport } from './routes/dashboard/update_url'
 import { Route as DashboardCreateshorturlImport } from './routes/dashboard/create_short_url'
+import { Route as DashboardUrlidImport } from './routes/dashboard/$url_id'
 import { Route as AuthRegisterImport } from './routes/auth/register'
 import { Route as AuthRefreshImport } from './routes/auth/refresh'
 import { Route as AuthLoginImport } from './routes/auth/login'
@@ -47,6 +48,11 @@ const DashboardCreateshorturlRoute = DashboardCreateshorturlImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const DashboardUrlidRoute = DashboardUrlidImport.update({
+  path: '/dashboard/$url_id',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AuthRegisterRoute = AuthRegisterImport.update({
   path: '/auth/register',
   getParentRoute: () => rootRoute,
@@ -67,34 +73,65 @@ const AuthLoginRoute = AuthLoginImport.update({
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
     '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
       preLoaderRoute: typeof ProfileImport
       parentRoute: typeof rootRoute
     }
     '/auth/login': {
+      id: '/auth/login'
+      path: '/auth/login'
+      fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginImport
       parentRoute: typeof rootRoute
     }
     '/auth/refresh': {
+      id: '/auth/refresh'
+      path: '/auth/refresh'
+      fullPath: '/auth/refresh'
       preLoaderRoute: typeof AuthRefreshImport
       parentRoute: typeof rootRoute
     }
     '/auth/register': {
+      id: '/auth/register'
+      path: '/auth/register'
+      fullPath: '/auth/register'
       preLoaderRoute: typeof AuthRegisterImport
       parentRoute: typeof rootRoute
     }
+    '/dashboard/$url_id': {
+      id: '/dashboard/$url_id'
+      path: '/dashboard/$url_id'
+      fullPath: '/dashboard/$url_id'
+      preLoaderRoute: typeof DashboardUrlidImport
+      parentRoute: typeof rootRoute
+    }
     '/dashboard/create_short_url': {
+      id: '/dashboard/create_short_url'
+      path: '/dashboard/create_short_url'
+      fullPath: '/dashboard/create_short_url'
       preLoaderRoute: typeof DashboardCreateshorturlImport
       parentRoute: typeof rootRoute
     }
     '/dashboard/update_url': {
+      id: '/dashboard/update_url'
+      path: '/dashboard/update_url'
+      fullPath: '/dashboard/update_url'
       preLoaderRoute: typeof DashboardUpdateurlImport
       parentRoute: typeof rootRoute
     }
     '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardIndexImport
       parentRoute: typeof rootRoute
     }
@@ -103,15 +140,64 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([
+export const routeTree = rootRoute.addChildren({
   IndexRoute,
   ProfileRoute,
   AuthLoginRoute,
   AuthRefreshRoute,
   AuthRegisterRoute,
+  DashboardUrlidRoute,
   DashboardCreateshorturlRoute,
   DashboardUpdateurlRoute,
   DashboardIndexRoute,
-])
+})
 
 /* prettier-ignore-end */
+
+/* ROUTE_MANIFEST_START
+{
+  "routes": {
+    "__root__": {
+      "filePath": "__root.tsx",
+      "children": [
+        "/",
+        "/profile",
+        "/auth/login",
+        "/auth/refresh",
+        "/auth/register",
+        "/dashboard/$url_id",
+        "/dashboard/create_short_url",
+        "/dashboard/update_url",
+        "/dashboard/"
+      ]
+    },
+    "/": {
+      "filePath": "index.tsx"
+    },
+    "/profile": {
+      "filePath": "profile.tsx"
+    },
+    "/auth/login": {
+      "filePath": "auth/login.tsx"
+    },
+    "/auth/refresh": {
+      "filePath": "auth/refresh.tsx"
+    },
+    "/auth/register": {
+      "filePath": "auth/register.tsx"
+    },
+    "/dashboard/$url_id": {
+      "filePath": "dashboard/$url_id.tsx"
+    },
+    "/dashboard/create_short_url": {
+      "filePath": "dashboard/create_short_url.tsx"
+    },
+    "/dashboard/update_url": {
+      "filePath": "dashboard/update_url.tsx"
+    },
+    "/dashboard/": {
+      "filePath": "dashboard/index.tsx"
+    }
+  }
+}
+ROUTE_MANIFEST_END */

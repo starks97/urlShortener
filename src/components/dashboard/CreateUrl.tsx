@@ -26,12 +26,16 @@ export default function UrlCreator() {
   const mutation = useMutation<
     CreateUrlResponse,
     unknown,
-    { original_url: string; short_url: string },
+    { original_url: string; short_url: string; category: string },
     unknown
   >({
-    mutationFn: async ({ original_url, short_url }) => {
+    mutationFn: async ({ original_url, short_url, category }) => {
       try {
-        const response = await createShortUrl(original_url, short_url);
+        const response = await createShortUrl(
+          original_url,
+          short_url,
+          category,
+        );
 
         return response as CreateUrlResponse;
       } catch (error) {
@@ -58,7 +62,7 @@ export default function UrlCreator() {
   });
 
   const onSubmit: SubmitHandler<CreateUrlSchemaType> = (data) => {
-    mutation.mutate(data);
+    mutation.mutate(data!);
   };
 
   return (

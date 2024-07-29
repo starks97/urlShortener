@@ -1,5 +1,7 @@
 import { Button, Navbar } from "flowbite-react";
 
+import { Link } from "@tanstack/react-router";
+
 interface Props {
   children: React.ReactNode;
 }
@@ -15,7 +17,13 @@ export default function Menu({ children }: Props) {
         />
       </Navbar.Brand>
       <div className="flex md:order-2">
-        <Button>Get started</Button>
+        <Link
+          to={"/dashboard"}
+          preload="intent"
+          activeProps={{ className: `font-bold` }}
+        >
+          <Button>Dashboard</Button>
+        </Link>
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>{children}</Navbar.Collapse>

@@ -13,4 +13,10 @@ export const CreateShortUrlField = [
     placeholder: "custom short url",
     required: true,
   },
+  {
+    name: "category",
+    type: "select",
+    label: "Category",
+    placeholder: "custom",
+  },
 ];
