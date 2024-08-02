@@ -2,11 +2,17 @@ import { UrlCardProps } from "./interfaces";
 
 import { Link } from "@tanstack/react-router";
 
-import { baseUrl } from "../../consts";
+import { useState } from "react";
+
+//import { baseUrl } from "../../consts";
 import ShareButton from "../ShareButton";
+
+import { QRModal } from "../qr";
 
 const UrlCard: React.FC<UrlCardProps> = ({ ...props }) => {
   const redirect = import.meta.env.VITE_REDIRECT_SHORT_URL;
+
+  const [openModal, setOpenModal] = useState(false);
 
   const handleRedirect = () => {
     window.open(`${redirect}${props.short_url}`, "_blank");
@@ -27,8 +33,9 @@ const UrlCard: React.FC<UrlCardProps> = ({ ...props }) => {
           </button>
 
           <ShareButton
-            shortUrl={`${baseUrl}/api/url/redirect/${props.short_url}`}
-            title={props.short_url}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
+            shortUrl={props.short_url}
           />
         </div>
 
@@ -45,6 +52,12 @@ const UrlCard: React.FC<UrlCardProps> = ({ ...props }) => {
           </Link>
         </div>
       </div>
+
+      <QRModal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        short_url={props.short_url}
+      />
     </>
   );
 };
