@@ -1,12 +1,14 @@
 import { Modal } from "flowbite-react";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import { ReactPortal } from "../Portal";
 
 import QRCodeGenerator from "./GenerateQR";
 
 import DownLoadQR from "./DownLoadQR";
+
+import { Spinner } from "flowbite-react";
 
 interface QRModalProps {
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,6 +28,16 @@ export default function QRModal({ ...props }: QRModalProps) {
 
   const handleClose = () => props.setOpenModal(false);
 
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
       <ReactPortal wrapperId="modal-portal">
@@ -42,17 +54,30 @@ export default function QRModal({ ...props }: QRModalProps) {
               </span>
             </Modal.Header>
             <Modal.Body>
-              <div>
-                <QRCodeGenerator
-                  canvasRef={canvasRef}
-                  url={redirectUrl}
-                  color="black"
-                  size={300}
-                  bg="white"
-                />
-                <canvas ref={canvasRef} width={300} height={300} />
-                <DownLoadQR canvasRef={canvasRef} />
-              </div>
+              {loading ? (
+                <div className="flex justify-center items-center">
+                  <Spinner size="xl" color="warning" />
+                </div>
+              ) : (
+                <div>
+                  <QRCodeGenerator
+                    canvasRef={canvasRef}
+                    url={redirectUrl}
+                    color={props.color}
+                    size={300}
+                    bg={props.bg}
+                  />
+                  <div className="flex justify-center items-center ">
+                    <canvas
+                      ref={canvasRef}
+                      width={300}
+                      height={300}
+                      style={{ border: "2px solid orange" }}
+                    />
+                  </div>
+                  <DownLoadQR canvasRef={canvasRef} />
+                </div>
+              )}
             </Modal.Body>
           </div>
         </Modal>

@@ -4,7 +4,6 @@ import { Link } from "@tanstack/react-router";
 
 import { useState } from "react";
 
-//import { baseUrl } from "../../consts";
 import ShareButton from "../ShareButton";
 
 import { QRModal } from "../qr";

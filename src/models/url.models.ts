@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { UrlCategory } from "../api";
+import { UrlCategories } from "../api";
 
 export const CreateUrlSchema = z.object({
   original_url: z.string().url(),
@@ -9,7 +9,7 @@ export const CreateUrlSchema = z.object({
     })
     .min(5)
     .max(30),
-  category: z.nativeEnum(UrlCategory),
+  category: z.nativeEnum(UrlCategories),
 });
 
 export const UpdateUrlSchema = CreateUrlSchema.partial();

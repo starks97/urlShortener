@@ -7,6 +7,8 @@ export type AuthState = {
   setServiceToken: (newRefreshToken: string | undefined) => void;
 };
 
+const oneHourFromNow: Date = new Date(new Date().getTime() + 60 * 60 * 1000);
+
 export const useAuthStore = createStore<AuthState>((set) => ({
   serviceToken: Cookies.get("service_token") as string,
 
@@ -14,7 +16,7 @@ export const useAuthStore = createStore<AuthState>((set) => ({
     set((state) => {
       if (newServiceToken) {
         Cookies.set("service_token", newServiceToken, {
-          expires: 7,
+          expires: oneHourFromNow,
           secure: true,
           sameSite: "none",
         });

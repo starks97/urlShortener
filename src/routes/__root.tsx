@@ -2,6 +2,7 @@ import {
   Outlet,
   createRootRouteWithContext,
   Link,
+  useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { QueryClient } from "@tanstack/react-query";
@@ -10,6 +11,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useAuthStore } from "../store";
 
 import { getAllUrl } from "../api";
+
+import { useState, useEffect } from "react";
 
 import Menu from "../components/Menu";
 
@@ -31,7 +34,19 @@ import { MenuPath } from "../consts";
 function RootComponent() {
   const loggedInCookie = Cookies.get("logged_in");
 
-  const currentPath = window.location.pathname;
+  const location = useLocation();
+
+  const [isMenuLoaded, setIsMenuLoaded] = useState<boolean>(false);
+
+  const currentPath = location.pathname;
+
+  useEffect(() => {
+    if (!currentPath.startsWith("/dashboard")) {
+      setIsMenuLoaded(true);
+    } else {
+      setIsMenuLoaded(false);
+    }
+  }, [currentPath]);
 
   const filteredMenuPaths = loggedInCookie
     ? MenuPath
@@ -39,7 +54,7 @@ function RootComponent() {
 
   return (
     <>
-      {!currentPath.startsWith("/dashboard") ? (
+      {isMenuLoaded ? (
         <Menu>
           {filteredMenuPaths.map(([to, label]) => (
             <li key={to}>

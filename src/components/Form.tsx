@@ -1,16 +1,17 @@
 // Form.tsx
 import React from "react";
-import { Button, Label, TextInput } from "flowbite-react";
+import { Label, TextInput, Select } from "flowbite-react";
 import { SubmitHandler, useForm, type FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodSchema } from "zod";
 
-interface FormField {
+export interface FormField {
   name: string;
-  type: string;
+  type: "text" | "select";
   label: string;
   placeholder: string;
   required: boolean;
+  options?: { value: string; label: string }[];
 }
 
 interface FormData {
@@ -55,14 +56,29 @@ const Form: React.FC<FormProps<any>> = ({
               className="text-md font-bold text-orange-500"
             />
           </div>
-          <TextInput
-            id={field.name}
-            type={field.type}
-            placeholder={field.placeholder}
-            required={field.required}
-            shadow
-            {...register(field.name)}
-          />
+          {field.type === "select" ? (
+            <Select
+              id={field.name}
+              required={field.required}
+              {...register(field.name)}
+            >
+              {field.options!.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          ) : (
+            <TextInput
+              id={field.name}
+              type={field.type}
+              placeholder={field.placeholder}
+              required={field.required}
+              shadow
+              {...register(field.name)}
+            />
+          )}
+
           {errors[field.name] && (
             <span className="text-red-500">{errors[field.name]?.message}</span>
           )}

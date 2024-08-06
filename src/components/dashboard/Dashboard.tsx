@@ -4,14 +4,23 @@ import { DateConverter } from "../../utils";
 import { DashboardProps } from "./interfaces";
 import Toast from "../Toast";
 
+import UrlFilterAndPagination from "./Filter&Pag";
+
 export default function DashboardMain({
   urls,
+  searchQueries,
 }: {
   urls: DashboardProps["urls"];
+  searchQueries: DashboardProps["searchQueries"];
 }) {
   return (
     <div>
       <Toast />
+      <UrlFilterAndPagination
+        currentCategory={searchQueries.category}
+        currentLimit={searchQueries.limit}
+        currentOffset={searchQueries.offset}
+      />
 
       <div className="grid gid-cols-1 md:grid-cols-3 gap-5 justify-items-center w-full">
         {urls["data"].map((url) => (

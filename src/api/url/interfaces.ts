@@ -68,7 +68,7 @@ export interface UpdateUrlResponse {
   };
 }
 
-export enum UrlCategory {
+export enum UrlCategories {
   All = "All",
   Tech = "Tech",
   News = "News",

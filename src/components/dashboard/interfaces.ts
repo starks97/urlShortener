@@ -1,7 +1,16 @@
 import { UrlsResponse } from "../../api";
 
+import { UrlCategories } from "../../api";
+
+export type UrlSearchOptions = {
+  limit: number;
+  offset: number;
+  category: UrlCategories;
+};
+
 export interface DashboardProps {
   urls: UrlsResponse;
+  searchQueries: UrlSearchOptions;
 }
 
 export interface UrlCardProps {

@@ -35,8 +35,8 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
             const qr = await QRCode.toDataURL(url, qrOptions);
             const image = new Image();
             image.onload = () => {
-              ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-              ctx.drawImage(image, 0, 0, canvas.width, canvas.height); // Draw QR code image
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
             };
             image.src = qr;
           }

@@ -1,4 +1,6 @@
-export const CreateShortUrlField = [
+import { FormField } from "../Form";
+
+export const CreateShortUrlField: FormField[] = [
   {
     name: "original_url",
     type: "text",
@@ -17,7 +19,17 @@ export const CreateShortUrlField = [
     name: "category",
     type: "select",
     label: "Category",
-    placeholder: "custom",
+    placeholder: "Select a category",
     required: true,
+    options: [
+      { value: "Tech", label: "Tech" },
+      { value: "News", label: "News" },
+      { value: "Music", label: "Music" },
+      { value: "Sports", label: "Sports" },
+      { value: "Movies", label: "Movies" },
+      { value: "Education", label: "Education" },
+      { value: "Science", label: "Science" },
+      { value: "Gaming", label: "Gaming" },
+    ],
   },
 ];

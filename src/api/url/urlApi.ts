@@ -2,6 +2,7 @@ import {
   UrlsResponse,
   CreateUrlResponse,
   UpdateUrlResponse,
+  UrlCategories,
 } from "./interfaces";
 import {
   GetHttpRequestStrategy,
@@ -26,10 +27,17 @@ const updateUrlContext = new HttpRequestContext(updateUrl);
 
 const urlContext = new HttpRequestContext(fetchUrl);
 
-export async function getAllUrl(limit: number, offset: number) {
-  return allUrlsContext.executeRequest<UrlsResponse>(
-    `${baseUrl}/url?limit=${limit}&offset=${offset}`,
-  );
+export async function getAllUrl(
+  limit?: number,
+  offset?: number,
+  category?: UrlCategories,
+) {
+  const categoryParam = category
+    ? `&category=${encodeURIComponent(category)}`
+    : "";
+  const url = `${baseUrl}/url?limit=${limit}&offset=${offset}${categoryParam}`;
+
+  return allUrlsContext.executeRequest<UrlsResponse>(url);
 }
 
 export async function getUrl(id: string) {

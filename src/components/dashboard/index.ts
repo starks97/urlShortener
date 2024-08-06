@@ -6,3 +6,4 @@ export { default as DashModal } from "./DashModal";
 export { default as SideMenu } from "./SideMenu";
 export { default as UrlCreator } from "./CreateUrl";
 export * from "./consts";
+export { default as UrlFilterAndPagination } from "./Filter&Pag";

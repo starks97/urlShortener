@@ -2,7 +2,7 @@ import { type SubmitHandler } from "react-hook-form";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { type CreateUrlResponse } from "../../api";
+import { UrlCategories, type CreateUrlResponse } from "../../api";
 
 import Form from "../Form";
 
@@ -45,10 +45,12 @@ export default function UrlCreator() {
         throw "An error occurred during creation of short url.";
       }
     },
-    onSuccess: (data) => {
-      console.log(data);
-
-      navigate({ to: "/dashboard" });
+    onSuccess: () => {
+      query.invalidateQueries({ queryKey: ["urls"] });
+      navigate({
+        to: "/dashboard",
+        search: { limit: 15, category: UrlCategories.All, offset: 0 },
+      });
 
       toast.success("Short url created successfully.");
     },
@@ -57,7 +59,7 @@ export default function UrlCreator() {
       toast.error("An error occurred during creation of short url.");
     },
     onSettled: async () => {
-      return await query.invalidateQueries({ queryKey: ["urls"] });
+      await query.invalidateQueries({ queryKey: ["urls"] });
     },
   });
 

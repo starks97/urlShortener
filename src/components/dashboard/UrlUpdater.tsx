@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { UrlUpdaterProps } from "./interfaces";
 
-import { updateShortUrl, UpdateUrlResponse, UrlCategory } from "../../api";
+import { updateShortUrl, UpdateUrlResponse, UrlCategories } from "../../api";
 
 import {
   UpdateUrlSchema,
@@ -36,7 +36,7 @@ export default function UrlUpdater({ ...props }: UrlUpdaterProps) {
   const mutation = useMutation<
     UpdateUrlResponse,
     unknown,
-    { original_url?: string; short_url?: string; category?: UrlCategory },
+    { original_url?: string; short_url?: string; category?: UrlCategories },
     unknown
   >({
     mutationFn: async ({ original_url, short_url, category }) => {
@@ -164,8 +164,8 @@ export default function UrlUpdater({ ...props }: UrlUpdaterProps) {
                 defaultValue={inputValue}
                 onChange={handleCategoryChange}
               >
-                {Object.values(UrlCategory)
-                  .filter((category) => category !== UrlCategory.All)
+                {Object.values(UrlCategories)
+                  .filter((category) => category !== UrlCategories.All)
                   .map((category) => (
                     <option key={category} value={category}>
                       {category}
