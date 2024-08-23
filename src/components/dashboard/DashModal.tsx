@@ -7,13 +7,19 @@ import { useNavigate } from "@tanstack/react-router";
 import UrlUpdater from "./UrlUpdater";
 
 import { DateConverter } from "../../utils";
+import { UrlCategories } from "../../api";
+import DeleteUrl from "./DeleteUrl";
 
 export default function DashModal({ ...props }: DashModalProps) {
   const navigate = useNavigate();
 
   const handleClose = () => {
     false;
-    navigate({ to: "/dashboard", replace: true });
+    navigate({
+      to: "/dashboard",
+      replace: true,
+      search: { limit: 15, offset: 0, category: UrlCategories.All },
+    });
   };
   return (
     <>
@@ -65,13 +71,7 @@ export default function DashModal({ ...props }: DashModalProps) {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <button
-              data-modal-hide="default-modal"
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
-              Delete
-            </button>
+            <DeleteUrl />
           </Modal.Footer>
         </div>
       </Modal>

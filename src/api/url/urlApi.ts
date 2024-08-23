@@ -3,6 +3,7 @@ import {
   CreateUrlResponse,
   UpdateUrlResponse,
   UrlCategories,
+  DeleteUrlResponse,
 } from "./interfaces";
 import {
   GetHttpRequestStrategy,
@@ -18,6 +19,7 @@ const getAllUrls = new GetHttpRequestStrategy();
 const fetchUrl = new GetHttpRequestStrategy();
 const createUrl = new PostHttpRequestStrategy();
 const updateUrl = new PatchHttpRequestStrategy();
+const deleteUrl = new DeleteHttpRequestStrategy();
 
 export const createUrlContext = new HttpRequestContext(createUrl);
 
@@ -26,6 +28,8 @@ const allUrlsContext = new HttpRequestContext(getAllUrls);
 const updateUrlContext = new HttpRequestContext(updateUrl);
 
 const urlContext = new HttpRequestContext(fetchUrl);
+
+const deleteUrlContext = new HttpRequestContext(deleteUrl);
 
 export async function getAllUrl(
   limit?: number,
@@ -72,5 +76,11 @@ export async function updateShortUrl(
       short_url,
       category,
     },
+  );
+}
+
+export async function deleteCustomUrl(id: string) {
+  return await deleteUrlContext.executeRequest<DeleteUrlResponse>(
+    `${baseUrl}/url/${id}`,
   );
 }

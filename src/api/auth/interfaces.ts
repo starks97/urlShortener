@@ -35,3 +35,7 @@ export interface ResfreshResponse {
   status: string;
   message?: string;
 }
+
+export interface SessionStatusResponse {
+  status: "valid" | "refresh" | "login";
+}

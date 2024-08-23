@@ -17,3 +17,20 @@ export const UpdateUrlSchema = CreateUrlSchema.partial();
 export type UpdateUrlSchemaType = z.infer<typeof UpdateUrlSchema>;
 
 export type CreateUrlSchemaType = z.infer<typeof CreateUrlSchema>;
+
+export const DeleteUrlSchema = z.object({
+  delete: z
+    .string()
+    .default("CONFIRM")
+    .superRefine((val, ctx) => {
+      if (val !== "CONFIRM") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Has to match with CONFIRM",
+          path: ["delete"],
+        });
+      }
+    }),
+});
+
+export type DeleteUrlSchemaType = z.infer<typeof DeleteUrlSchema>;

@@ -2,16 +2,16 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 import { UrlCreator } from "../../components/dashboard";
 
-import { customMiddleware } from "../../Custom_middleware";
+import { middleware } from "../../middleware";
+
+import { Spinner } from "../../utils";
 
 export const Route = createFileRoute("/dashboard/create_short_url")({
   beforeLoad: async ({ context, location }) => {
-    customMiddleware(context, location);
-
-    return;
+    await middleware(location);
   },
 
-  pendingComponent: () => <div>Loading...</div>,
+  pendingComponent: () => <Spinner />,
 
   component: CreateUrl,
 });

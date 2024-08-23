@@ -1,10 +1,10 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { ProfileMe } from "../components/profile";
 
 import { queryOptions } from "@tanstack/react-query";
 
-import { customMiddleware } from "../Custom_middleware";
+import { middleware } from "../middleware";
 
 import { profileRequest, ProfileResponse } from "../api";
 
@@ -15,7 +15,7 @@ const ProfileQueryOptions = queryOptions({
 
 export const Route = createFileRoute("/profile")({
   beforeLoad: async ({ context, location }) => {
-    customMiddleware(context, location);
+    await middleware(location);
     return await context.queryClient.prefetchQuery(ProfileQueryOptions);
   },
   loader: async ({ context }) => {

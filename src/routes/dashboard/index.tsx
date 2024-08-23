@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 import { queryOptions } from "@tanstack/react-query";
 
@@ -9,6 +9,8 @@ import { getAllUrl, type UrlsResponse, UrlCategories } from "../../api";
 import { RouterSpinner } from "../../utils";
 
 import { UrlSearchOptions } from "../../components/dashboard";
+
+import { baseUrl } from "../../consts";
 
 const urlsQueryOptions = (
   limit: number,
@@ -21,11 +23,11 @@ const urlsQueryOptions = (
     queryFn: () => getAllUrl(limit, offset, category),
   });
 
-import { customMiddleware } from "../../Custom_middleware";
+import { SessionStatusResponse } from "../../api";
 
 export const Route = createFileRoute("/dashboard/")({
-  beforeLoad: async ({ context, location }) => {
-    customMiddleware(context, location);
+  beforeLoad: async ({ location, context }) => {
+    console.log("hello from beforeLoad..");
   },
   validateSearch: (search: Record<string, unknown>): UrlSearchOptions => {
     return {

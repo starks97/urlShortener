@@ -1,5 +1,3 @@
-import { useContext } from "react";
-
 import { useMutation } from "@tanstack/react-query";
 
 import { useNavigate } from "@tanstack/react-router";
@@ -11,24 +9,13 @@ import {
   LoginUserSchema,
 } from "../../models/auth.models";
 
-import { AuthContext } from "../../context";
-
-import { useStore } from "zustand";
-
 import { LoginFormField } from "./consts";
 
-import { loginRequest, LoginResponse } from "../../api";
+import { loginRequest, LoginResponse, UrlCategories } from "../../api";
 
 import Form from "../Form";
 
 export default function LoginForm() {
-  const authStore = useContext(AuthContext);
-
-  const setServiceToken = useStore(
-    authStore!,
-    (state) => state.setServiceToken
-  );
-
   const navigate = useNavigate();
 
   const mutation = useMutation<
@@ -50,9 +37,11 @@ export default function LoginForm() {
       }
     },
 
-    onSuccess: (data) => {
-      setServiceToken("true");
-      navigate({ to: "/dashboard" });
+    onSuccess: () => {
+      navigate({
+        to: "/dashboard",
+        search: { limit: 15, offset: 0, category: UrlCategories.All },
+      });
     },
   });
 

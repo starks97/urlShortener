@@ -8,7 +8,7 @@ import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthContextProvider, useAuth } from "./context";
 
-import { useAuthStore } from "./store";
+import { sessionActions } from "./context";
 
 import { getAllUrl } from "./api";
 
@@ -18,7 +18,7 @@ const router = createRouter({
   routeTree,
   context: {
     queryClient,
-    auth: useAuthStore,
+    auth: sessionActions,
     urls: getAllUrl,
   },
   defaultPreload: "intent",

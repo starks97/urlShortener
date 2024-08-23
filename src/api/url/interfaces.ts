@@ -68,6 +68,9 @@ export interface UpdateUrlResponse {
   };
 }
 
+export interface DeleteUrlResponse
+  extends Pick<UpdateUrlResponse, "message" | "status"> {}
+
 export enum UrlCategories {
   All = "All",
   Tech = "Tech",

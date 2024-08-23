@@ -33,3 +33,13 @@ export const CreateShortUrlField: FormField[] = [
     ],
   },
 ];
+
+export const DeleteUrlField: FormField[] = [
+  {
+    name: "delete",
+    type: "text",
+    label: "delete url",
+    placeholder: "CONFIRM",
+    required: true,
+  },
+];

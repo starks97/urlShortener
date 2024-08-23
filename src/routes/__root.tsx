@@ -8,7 +8,7 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import { useAuthStore } from "../store";
+import { sessionActions } from "../context";
 
 import { getAllUrl } from "../api";
 
@@ -20,7 +20,7 @@ import { SideMenu } from "../components/dashboard";
 
 interface Context {
   queryClient: QueryClient;
-  auth: typeof useAuthStore;
+  auth: typeof sessionActions;
   urls: typeof getAllUrl;
 }
 
@@ -28,29 +28,57 @@ export const Route = createRootRouteWithContext<Context>()({
   component: RootComponent,
 });
 
-import Cookies from "js-cookie";
 import { MenuPath } from "../consts";
 
+import { SessionStatusResponse } from "../api";
+import { baseUrl } from "../consts";
+
 function RootComponent() {
-  const loggedInCookie = Cookies.get("logged_in");
-
   const location = useLocation();
+  const [sessionStatus, setSessionStatus] =
+    useState<SessionStatusResponse | null>(null);
 
+  console.log(sessionStatus);
   const [isMenuLoaded, setIsMenuLoaded] = useState<boolean>(false);
 
-  const currentPath = location.pathname;
+  useEffect(() => {
+    const checkSessionStatus = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/session_status`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok.");
+        }
+
+        const data = (await response.json()) as SessionStatusResponse;
+        setSessionStatus(data);
+      } catch (error) {
+        console.error("Error checking session status:", error);
+      }
+    };
+
+    checkSessionStatus();
+  }, []);
 
   useEffect(() => {
+    const currentPath = location.pathname;
     if (!currentPath.startsWith("/dashboard")) {
       setIsMenuLoaded(true);
     } else {
       setIsMenuLoaded(false);
     }
-  }, [currentPath]);
+  }, [location.pathname]);
 
-  const filteredMenuPaths = loggedInCookie
-    ? MenuPath
-    : MenuPath.filter(([to]) => !to.startsWith("/dashboard"));
+  const filteredMenuPaths =
+    sessionStatus?.status === "valid"
+      ? MenuPath
+      : MenuPath.filter(([to]) => !to.startsWith("/dashboard"));
 
   return (
     <>

@@ -1,4 +1,6 @@
-export const LoginFormField = [
+import { FormField } from "../Form";
+
+export const LoginFormField: FormField[] = [
   {
     name: "email",
     type: "email",
@@ -15,7 +17,7 @@ export const LoginFormField = [
   },
 ];
 
-export const RegisterFormField = [
+export const RegisterFormField: FormField[] = [
   {
     name: "name",
     type: "text",

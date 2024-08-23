@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { customMiddleware } from "../../Custom_middleware";
+import { middleware } from "../../middleware";
 
 import { getUrl, UrlResponse } from "../../api";
 
@@ -20,7 +20,7 @@ const urlQueryOptions = (id: string) =>
 
 export const Route = createFileRoute("/dashboard/$url_id")({
   beforeLoad: async ({ context, location, params }) => {
-    customMiddleware(context, location);
+    await middleware(location);
 
     await context.queryClient.prefetchQuery(urlQueryOptions(params.url_id));
   },

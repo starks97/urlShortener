@@ -15,17 +15,24 @@ export class GetHttpRequestStrategy implements HttpRequestStrategy {
         credentials: "include", // this is important for cookies to be sent for the request
       });
 
-      const dat = (await res.json()) as T;
+      let data: T | { message?: string };
 
-      if (!res.ok)
-        throw new Error(
-          (dat as { message?: string }).message || "An error occurred"
-        );
+      try {
+        data = await res.json();
+      } catch (jsonError) {
+        throw new Error("Failed to parse response as JSON");
+      }
 
-      return dat as T;
+      if (!res.ok) {
+        const errorMessage =
+          (data as { message?: string }).message || "An error occurred";
+        throw new Error(errorMessage);
+      }
+
+      return data as ApiResponse<T>;
     } catch (error) {
-      console.error(error);
-      throw error as Error;
+      console.error("Request failed:", error);
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 }
@@ -46,7 +53,7 @@ export class PostHttpRequestStrategy implements HttpRequestStrategy {
 
       if (!res.ok)
         throw new Error(
-          (dat as { message?: string }).message || "An error occurred"
+          (dat as { message?: string }).message || "An error occurred",
         );
 
       return dat as T;
@@ -73,7 +80,7 @@ export class PatchHttpRequestStrategy implements HttpRequestStrategy {
 
       if (!res.ok)
         throw new Error(
-          (dat as { message?: string }).message || "An error occurred"
+          (dat as { message?: string }).message || "An error occurred",
         );
 
       return dat as T;
@@ -99,7 +106,7 @@ export class DeleteHttpRequestStrategy implements HttpRequestStrategy {
 
       if (!res.ok)
         throw new Error(
-          (dat as { message?: string }).message || "An error occurred"
+          (dat as { message?: string }).message || "An error occurred",
         );
 
       return dat as T;

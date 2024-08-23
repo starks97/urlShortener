@@ -7,7 +7,7 @@ import { ZodSchema } from "zod";
 
 export interface FormField {
   name: string;
-  type: "text" | "select";
+  type: "text" | "select" | "password" | "email";
   label: string;
   placeholder: string;
   required: boolean;

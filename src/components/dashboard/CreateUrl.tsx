@@ -45,14 +45,14 @@ export default function UrlCreator() {
         throw "An error occurred during creation of short url.";
       }
     },
-    onSuccess: () => {
-      query.invalidateQueries({ queryKey: ["urls"] });
+    onMutate: () => {
       navigate({
         to: "/dashboard",
         search: { limit: 15, category: UrlCategories.All, offset: 0 },
       });
 
       toast.success("Short url created successfully.");
+      return query.getQueryData(["urls"]);
     },
     onError: (error) => {
       console.log(error);
