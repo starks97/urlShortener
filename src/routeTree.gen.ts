@@ -11,45 +11,25 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as ProfileImport } from './routes/profile'
+import { Route as AuthedImport } from './routes/_authed'
 import { Route as IndexImport } from './routes/index'
-import { Route as DashboardIndexImport } from './routes/dashboard/index'
-import { Route as DashboardUpdateurlImport } from './routes/dashboard/update_url'
-import { Route as DashboardCreateshorturlImport } from './routes/dashboard/create_short_url'
-import { Route as DashboardUrlidImport } from './routes/dashboard/$url_id'
 import { Route as AuthRegisterImport } from './routes/auth/register'
 import { Route as AuthRefreshImport } from './routes/auth/refresh'
 import { Route as AuthLoginImport } from './routes/auth/login'
+import { Route as AuthedProfileImport } from './routes/_authed/profile'
+import { Route as AuthedDashboardIndexImport } from './routes/_authed/dashboard/index'
+import { Route as AuthedDashboardCreateshorturlImport } from './routes/_authed/dashboard/create_short_url'
+import { Route as AuthedDashboardUrlidImport } from './routes/_authed/dashboard/$url_id'
 
 // Create/Update Routes
 
-const ProfileRoute = ProfileImport.update({
-  path: '/profile',
+const AuthedRoute = AuthedImport.update({
+  id: '/_authed',
   getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const DashboardIndexRoute = DashboardIndexImport.update({
-  path: '/dashboard/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const DashboardUpdateurlRoute = DashboardUpdateurlImport.update({
-  path: '/dashboard/update_url',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const DashboardCreateshorturlRoute = DashboardCreateshorturlImport.update({
-  path: '/dashboard/create_short_url',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const DashboardUrlidRoute = DashboardUrlidImport.update({
-  path: '/dashboard/$url_id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -68,6 +48,27 @@ const AuthLoginRoute = AuthLoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthedProfileRoute = AuthedProfileImport.update({
+  path: '/profile',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedDashboardIndexRoute = AuthedDashboardIndexImport.update({
+  path: '/dashboard/',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
+const AuthedDashboardCreateshorturlRoute =
+  AuthedDashboardCreateshorturlImport.update({
+    path: '/dashboard/create_short_url',
+    getParentRoute: () => AuthedRoute,
+  } as any)
+
+const AuthedDashboardUrlidRoute = AuthedDashboardUrlidImport.update({
+  path: '/dashboard/$url_id',
+  getParentRoute: () => AuthedRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -79,12 +80,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/profile': {
-      id: '/profile'
+    '/_authed': {
+      id: '/_authed'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthedImport
+      parentRoute: typeof rootRoute
+    }
+    '/_authed/profile': {
+      id: '/_authed/profile'
       path: '/profile'
       fullPath: '/profile'
-      preLoaderRoute: typeof ProfileImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthedProfileImport
+      parentRoute: typeof AuthedImport
     }
     '/auth/login': {
       id: '/auth/login'
@@ -107,33 +115,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard/$url_id': {
-      id: '/dashboard/$url_id'
+    '/_authed/dashboard/$url_id': {
+      id: '/_authed/dashboard/$url_id'
       path: '/dashboard/$url_id'
       fullPath: '/dashboard/$url_id'
-      preLoaderRoute: typeof DashboardUrlidImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthedDashboardUrlidImport
+      parentRoute: typeof AuthedImport
     }
-    '/dashboard/create_short_url': {
-      id: '/dashboard/create_short_url'
+    '/_authed/dashboard/create_short_url': {
+      id: '/_authed/dashboard/create_short_url'
       path: '/dashboard/create_short_url'
       fullPath: '/dashboard/create_short_url'
-      preLoaderRoute: typeof DashboardCreateshorturlImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthedDashboardCreateshorturlImport
+      parentRoute: typeof AuthedImport
     }
-    '/dashboard/update_url': {
-      id: '/dashboard/update_url'
-      path: '/dashboard/update_url'
-      fullPath: '/dashboard/update_url'
-      preLoaderRoute: typeof DashboardUpdateurlImport
-      parentRoute: typeof rootRoute
-    }
-    '/dashboard/': {
-      id: '/dashboard/'
+    '/_authed/dashboard/': {
+      id: '/_authed/dashboard/'
       path: '/dashboard'
       fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardIndexImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AuthedDashboardIndexImport
+      parentRoute: typeof AuthedImport
     }
   }
 }
@@ -142,14 +143,15 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
-  ProfileRoute,
+  AuthedRoute: AuthedRoute.addChildren({
+    AuthedProfileRoute,
+    AuthedDashboardUrlidRoute,
+    AuthedDashboardCreateshorturlRoute,
+    AuthedDashboardIndexRoute,
+  }),
   AuthLoginRoute,
   AuthRefreshRoute,
   AuthRegisterRoute,
-  DashboardUrlidRoute,
-  DashboardCreateshorturlRoute,
-  DashboardUpdateurlRoute,
-  DashboardIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -161,21 +163,27 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/profile",
+        "/_authed",
         "/auth/login",
         "/auth/refresh",
-        "/auth/register",
-        "/dashboard/$url_id",
-        "/dashboard/create_short_url",
-        "/dashboard/update_url",
-        "/dashboard/"
+        "/auth/register"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/profile": {
-      "filePath": "profile.tsx"
+    "/_authed": {
+      "filePath": "_authed.tsx",
+      "children": [
+        "/_authed/profile",
+        "/_authed/dashboard/$url_id",
+        "/_authed/dashboard/create_short_url",
+        "/_authed/dashboard/"
+      ]
+    },
+    "/_authed/profile": {
+      "filePath": "_authed/profile.tsx",
+      "parent": "/_authed"
     },
     "/auth/login": {
       "filePath": "auth/login.tsx"
@@ -186,17 +194,17 @@ export const routeTree = rootRoute.addChildren({
     "/auth/register": {
       "filePath": "auth/register.tsx"
     },
-    "/dashboard/$url_id": {
-      "filePath": "dashboard/$url_id.tsx"
+    "/_authed/dashboard/$url_id": {
+      "filePath": "_authed/dashboard/$url_id.tsx",
+      "parent": "/_authed"
     },
-    "/dashboard/create_short_url": {
-      "filePath": "dashboard/create_short_url.tsx"
+    "/_authed/dashboard/create_short_url": {
+      "filePath": "_authed/dashboard/create_short_url.tsx",
+      "parent": "/_authed"
     },
-    "/dashboard/update_url": {
-      "filePath": "dashboard/update_url.tsx"
-    },
-    "/dashboard/": {
-      "filePath": "dashboard/index.tsx"
+    "/_authed/dashboard/": {
+      "filePath": "_authed/dashboard/index.tsx",
+      "parent": "/_authed"
     }
   }
 }

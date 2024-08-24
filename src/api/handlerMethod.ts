@@ -26,7 +26,7 @@ export class GetHttpRequestStrategy implements HttpRequestStrategy {
       if (!res.ok) {
         const errorMessage =
           (data as { message?: string }).message || "An error occurred";
-        throw new Error(errorMessage);
+        console.error("Request:", errorMessage);
       }
 
       return data as ApiResponse<T>;

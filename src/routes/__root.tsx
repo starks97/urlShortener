@@ -2,7 +2,7 @@ import {
   Outlet,
   createRootRouteWithContext,
   Link,
-  useLocation,
+  //useLocation,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { QueryClient } from "@tanstack/react-query";
@@ -10,18 +10,15 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { sessionActions } from "../context";
 
-import { getAllUrl } from "../api";
-
-import { useState, useEffect } from "react";
+//import { useState, useEffect } from "react";
 
 import Menu from "../components/Menu";
 
-import { SideMenu } from "../components/dashboard";
+//import { SideMenu } from "../components/dashboard";
 
 interface Context {
   queryClient: QueryClient;
   auth: typeof sessionActions;
-  urls: typeof getAllUrl;
 }
 
 export const Route = createRootRouteWithContext<Context>()({
@@ -30,16 +27,14 @@ export const Route = createRootRouteWithContext<Context>()({
 
 import { MenuPath } from "../consts";
 
-import { SessionStatusResponse } from "../api";
-import { baseUrl } from "../consts";
-
 function RootComponent() {
-  const location = useLocation();
-  const [sessionStatus, setSessionStatus] =
+  //const location = useLocation();
+  //const [isMenuLoaded, setIsMenuLoaded] = useState<boolean>(false);
+  /*const [sessionStatus, setSessionStatus] =
     useState<SessionStatusResponse | null>(null);
 
   console.log(sessionStatus);
-  const [isMenuLoaded, setIsMenuLoaded] = useState<boolean>(false);
+
 
   useEffect(() => {
     const checkSessionStatus = async () => {
@@ -73,36 +68,51 @@ function RootComponent() {
     } else {
       setIsMenuLoaded(false);
     }
-  }, [location.pathname]);
+    }, [location.pathname]);*/
 
-  const filteredMenuPaths =
-    sessionStatus?.status === "valid"
-      ? MenuPath
-      : MenuPath.filter(([to]) => !to.startsWith("/dashboard"));
+  const filteredMenuPaths = MenuPath.filter(
+    ([to]) => !to.startsWith("/dashboard"),
+  );
 
   return (
     <>
-      {isMenuLoaded ? (
-        <Menu>
-          {filteredMenuPaths.map(([to, label]) => (
-            <li key={to}>
-              <Link
-                to={to}
-                preload="intent"
-                className={`block py-2 px-3 text-blue-700`}
-                activeProps={{ className: `font-bold` }}
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </Menu>
-      ) : (
-        <SideMenu />
-      )}
+      <Menu>
+        {filteredMenuPaths.map(([to, label]) => (
+          <li key={to}>
+            <Link
+              to={to}
+              preload="intent"
+              className={`block py-2 px-3 text-blue-700`}
+              activeProps={{ className: `font-bold` }}
+            >
+              {label}
+            </Link>
+          </li>
+        ))}
+      </Menu>
+
       <Outlet />
       <ReactQueryDevtools buttonPosition="bottom-left" />
       <TanStackRouterDevtools position="bottom-right" />
     </>
   );
 }
+
+/* {isMenuLoaded ? (
+  <Menu>
+    {filteredMenuPaths.map(([to, label]) => (
+      <li key={to}>
+        <Link
+          to={to}
+          preload="intent"
+          className={`block py-2 px-3 text-blue-700`}
+          activeProps={{ className: `font-bold` }}
+        >
+          {label}
+        </Link>
+      </li>
+    ))}
+  </Menu>
+) : (
+  <SideMenu />
+)}*/

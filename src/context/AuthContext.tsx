@@ -1,62 +1,55 @@
-import { createContext, useRef } from "react";
-import React from "react";
+import { createContext } from "react";
+import React, { useState } from "react";
 
-import { ParsedLocation, redirect } from "@tanstack/react-router";
+import { baseUrl } from "../consts";
 
-import { UrlCategories } from "../api";
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  checkSessionStatus: () => Promise<void>;
+}
 
-export const sessionActions: Record<
-  string,
-  (location: ParsedLocation) => void
-> = {
-  valid: () => {
-    throw redirect({
-      to: "/dashboard",
-      search: {
-        category: UrlCategories.All,
-        limit: 15,
-        offset: 0,
-      },
-    });
-  },
-  login: (location: ParsedLocation) => {
-    throw redirect({
-      to: "/auth/login",
-      search: {
-        redirect: location.href,
-      },
-    });
-  },
-
-  refresh: (location: ParsedLocation) => {
-    throw redirect({
-      to: "/auth/refresh",
-      search: {
-        redirect: location.href,
-      },
-    });
-  },
-  default: (location: ParsedLocation) => {
-    throw redirect({
-      to: "/auth/login",
-      search: {
-        redirect: location.href,
-      },
-    });
-  },
-};
-
-export const AuthContext = createContext<typeof sessionActions | null>(null);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const store = useRef(sessionActions);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const checkSessionStatus = async () => {
+    //this is important to prevent infinite loop and making unnecessary requests, this is like cache for the session status.
+    if (isAuthenticated) return;
+
+    try {
+      const response = await fetch(`${baseUrl}/session_status`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const data = (await response.json()) as {
+        status: "access" | "refresh" | "login";
+      };
+
+      if (response.status === 401 || data.status === "login") {
+        setIsAuthenticated(false);
+        window.location.href = "/auth/login";
+      } else if (data.status === "refresh") {
+        setIsAuthenticated(false);
+        window.location.href = "/auth/refresh";
+      }
+
+      setIsAuthenticated(true);
+    } catch (error) {
+      setIsAuthenticated(false);
+      throw error;
+    }
+  };
 
   return (
-    <AuthContext.Provider value={store.current}>
+    <AuthContext.Provider value={{ isAuthenticated, checkSessionStatus }}>
       {children}
     </AuthContext.Provider>
   );
@@ -68,5 +61,5 @@ export function useAuth() {
     throw new Error("useAuth must be used within an AuthProvider");
   }
 
-  return context; // Return the context directly
+  return context;
 }

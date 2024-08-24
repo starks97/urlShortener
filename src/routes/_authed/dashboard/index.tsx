@@ -1,16 +1,14 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 import { queryOptions } from "@tanstack/react-query";
 
-import { DashboardMain } from "../../components/dashboard";
+import { DashboardMain } from "../../../components/dashboard";
 
-import { getAllUrl, type UrlsResponse, UrlCategories } from "../../api";
+import { getAllUrl, type UrlsResponse, UrlCategories } from "../../../api";
 
-import { RouterSpinner } from "../../utils";
+import { RouterSpinner } from "../../../utils";
 
-import { UrlSearchOptions } from "../../components/dashboard";
-
-import { baseUrl } from "../../consts";
+import { UrlSearchOptions } from "../../../components/dashboard";
 
 const urlsQueryOptions = (
   limit: number,
@@ -23,12 +21,7 @@ const urlsQueryOptions = (
     queryFn: () => getAllUrl(limit, offset, category),
   });
 
-import { SessionStatusResponse } from "../../api";
-
-export const Route = createFileRoute("/dashboard/")({
-  beforeLoad: async ({ location, context }) => {
-    console.log("hello from beforeLoad..");
-  },
+export const Route = createFileRoute("/_authed/dashboard/")({
   validateSearch: (search: Record<string, unknown>): UrlSearchOptions => {
     return {
       limit: Number(search?.limit ?? 15),
