@@ -1,12 +1,10 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
 import { DashboardMain } from "../../../components/dashboard";
 
-import { getAllUrl, type UrlsResponse, UrlCategories } from "../../../api";
-
-import { RouterSpinner } from "../../../utils";
+import { getAllUrl, UrlCategories } from "../../../api";
 
 import { UrlSearchOptions } from "../../../components/dashboard";
 
@@ -47,21 +45,24 @@ export const Route = createFileRoute("/_authed/dashboard/")({
     };
   },
 
-  pendingComponent: () => <RouterSpinner />,
-
   component: Dashboard,
 });
 
 function Dashboard() {
-  const { urls }: { urls: UrlsResponse } = Route.useLoaderData();
-
   const searchProps = Route.useSearch();
+  const { data: urls } = useSuspenseQuery(
+    urlsQueryOptions(
+      searchProps.limit,
+      searchProps.offset,
+      searchProps.category,
+    ),
+  );
 
   return (
     <>
       <div className="p-4 sm:ml-64">
         <div className="p-4 rounded-lg min-h-[calc(100vh-3.5rem)]">
-          <DashboardMain urls={urls!} searchQueries={searchProps} />
+          <DashboardMain urls={urls} searchQueries={searchProps} />
           <Outlet />
         </div>
       </div>

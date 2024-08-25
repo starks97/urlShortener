@@ -2,14 +2,16 @@ import { useRouterState } from "@tanstack/react-router";
 
 export function Spinner({
   show = true,
-  wait,
+  wait = "delay-300",
 }: {
   show?: boolean;
   wait?: `delay-${number}`;
 }) {
   return (
     <div
-      className={`inline-block animate-spin px-3 transition-opacity duration-500 ${show ? (wait ? `delay-${wait}` : "delay-300") : "opacity-0 delay-0"}`}
+      className={`inline-block animate-spin px-3 transition-opacity duration-500 ${
+        show ? wait : "opacity-0 delay-0"
+      }`}
     >
       ⍥
     </div>

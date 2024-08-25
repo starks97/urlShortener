@@ -1,11 +1,11 @@
 type ApiResponse<T> = T | Error;
 
 interface HttpRequestStrategy {
-  execute<T>(url: string, data?: any): Promise<ApiResponse<T>>;
+  execute<T>(url: string, data?: any): Promise<T>;
 }
 
 export class GetHttpRequestStrategy implements HttpRequestStrategy {
-  async execute<T>(url: string): Promise<ApiResponse<T>> {
+  async execute<T>(url: string): Promise<T> {
     try {
       const res = await fetch(url, {
         method: "GET",
@@ -29,7 +29,7 @@ export class GetHttpRequestStrategy implements HttpRequestStrategy {
         console.error("Request:", errorMessage);
       }
 
-      return data as ApiResponse<T>;
+      return data as T;
     } catch (error) {
       console.error("Request failed:", error);
       throw error instanceof Error ? error : new Error(String(error));
@@ -38,7 +38,7 @@ export class GetHttpRequestStrategy implements HttpRequestStrategy {
 }
 
 export class PostHttpRequestStrategy implements HttpRequestStrategy {
-  async execute<T>(url: string, data: any): Promise<ApiResponse<T>> {
+  async execute<T>(url: string, data: any): Promise<T> {
     try {
       const res = await fetch(url, {
         method: "POST",
@@ -58,14 +58,14 @@ export class PostHttpRequestStrategy implements HttpRequestStrategy {
 
       return dat as T;
     } catch (error) {
-      console.error(error);
-      throw error as Error;
+      console.error("Request failed:", error);
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 }
 
 export class PatchHttpRequestStrategy implements HttpRequestStrategy {
-  async execute<T>(url: string, data: object): Promise<ApiResponse<T>> {
+  async execute<T>(url: string, data: object): Promise<T> {
     try {
       const res = await fetch(url, {
         method: "PATCH",
@@ -85,14 +85,14 @@ export class PatchHttpRequestStrategy implements HttpRequestStrategy {
 
       return dat as T;
     } catch (error) {
-      console.error(error);
-      throw error as Error;
+      console.error("Request failed:", error);
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 }
 
 export class DeleteHttpRequestStrategy implements HttpRequestStrategy {
-  async execute<T>(url: string): Promise<ApiResponse<T>> {
+  async execute<T>(url: string): Promise<T> {
     try {
       const res = await fetch(url, {
         method: "DELETE",
@@ -111,8 +111,8 @@ export class DeleteHttpRequestStrategy implements HttpRequestStrategy {
 
       return dat as T;
     } catch (error) {
-      console.error(error);
-      throw error as Error;
+      console.error("Request failed:", error);
+      throw error instanceof Error ? error : new Error(String(error));
     }
   }
 }
@@ -124,7 +124,7 @@ export class HttpRequestContext {
     this.strategy = strategy;
   }
 
-  async executeRequest<T>(url: string, data?: any): Promise<ApiResponse<T>> {
+  async executeRequest<T>(url: string, data?: any): Promise<T> {
     return this.strategy.execute(url, data);
   }
 }

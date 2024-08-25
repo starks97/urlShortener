@@ -47,7 +47,6 @@ export default function DashModal({ ...props }: DashModalProps) {
               id={props.data.id}
               label="original_url"
             />
-
             <UrlUpdater
               data={props.data.category}
               id={props.data.id}

@@ -4,6 +4,7 @@ import {
   UpdateUrlResponse,
   UrlCategories,
   DeleteUrlResponse,
+  UrlResponse,
 } from "./interfaces";
 import {
   GetHttpRequestStrategy,
@@ -45,7 +46,7 @@ export async function getAllUrl(
 }
 
 export async function getUrl(id: string) {
-  return urlContext.executeRequest<UrlsResponse>(`${baseUrl}/url/${id}`);
+  return urlContext.executeRequest<UrlResponse>(`${baseUrl}/url/${id}`);
 }
 
 export async function createShortUrl(

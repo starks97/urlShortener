@@ -8,8 +8,6 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import { sessionActions } from "../context";
-
 //import { useState, useEffect } from "react";
 
 import Menu from "../components/Menu";
@@ -18,7 +16,7 @@ import Menu from "../components/Menu";
 
 interface Context {
   queryClient: QueryClient;
-  auth: typeof sessionActions;
+  auth: AuthContextType | null;
 }
 
 export const Route = createRootRouteWithContext<Context>()({
@@ -26,49 +24,11 @@ export const Route = createRootRouteWithContext<Context>()({
 });
 
 import { MenuPath } from "../consts";
+import { AuthContextType } from "../context";
 
 function RootComponent() {
   //const location = useLocation();
   //const [isMenuLoaded, setIsMenuLoaded] = useState<boolean>(false);
-  /*const [sessionStatus, setSessionStatus] =
-    useState<SessionStatusResponse | null>(null);
-
-  console.log(sessionStatus);
-
-
-  useEffect(() => {
-    const checkSessionStatus = async () => {
-      try {
-        const response = await fetch(`${baseUrl}/session_status`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok.");
-        }
-
-        const data = (await response.json()) as SessionStatusResponse;
-        setSessionStatus(data);
-      } catch (error) {
-        console.error("Error checking session status:", error);
-      }
-    };
-
-    checkSessionStatus();
-  }, []);
-
-  useEffect(() => {
-    const currentPath = location.pathname;
-    if (!currentPath.startsWith("/dashboard")) {
-      setIsMenuLoaded(true);
-    } else {
-      setIsMenuLoaded(false);
-    }
-    }, [location.pathname]);*/
 
   const filteredMenuPaths = MenuPath.filter(
     ([to]) => !to.startsWith("/dashboard"),
