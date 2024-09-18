@@ -1,5 +1,3 @@
-type ApiResponse<T> = T | Error;
-
 interface HttpRequestStrategy {
   execute<T>(url: string, data?: any): Promise<T>;
 }
@@ -12,7 +10,7 @@ export class GetHttpRequestStrategy implements HttpRequestStrategy {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // this is important for cookies to be sent for the request
+        credentials: "include",
       });
 
       let data: T | { message?: string };

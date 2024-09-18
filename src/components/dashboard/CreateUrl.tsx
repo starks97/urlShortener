@@ -2,7 +2,7 @@ import { type SubmitHandler } from "react-hook-form";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { UrlCategories, type CreateUrlResponse } from "../../api";
+import { type CreateUrlResponse } from "../../api";
 
 import Form from "../Form";
 
@@ -13,10 +13,34 @@ import {
 
 import { CreateShortUrlField } from "./consts";
 
-import { createShortUrl } from "../../api";
 import { useNavigate } from "@tanstack/react-router";
 
 import toast from "react-hot-toast";
+
+import { searchParams } from "../../consts";
+
+import axios from "../../axiosConfig";
+
+const createShortUrl = async (
+  original_url: string,
+  short_url: string,
+  category: string,
+) => {
+  try {
+    const response = await axios.post("/url", {
+      original_url,
+      short_url,
+      category,
+    });
+
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error.message;
+    }
+    throw "An error occurred during creation of short url.";
+  }
+};
 
 export default function UrlCreator() {
   const query = useQueryClient();
@@ -48,7 +72,7 @@ export default function UrlCreator() {
     onMutate: () => {
       navigate({
         to: "/dashboard",
-        search: { limit: 15, category: UrlCategories.All, offset: 0 },
+        search: { ...searchParams.search },
       });
 
       toast.success("Short url created successfully.");

@@ -1,6 +1,8 @@
 import ReactDOM from "react-dom/client";
 import "./global.css";
 
+import { Suspense } from "react";
+
 import {
   RouterProvider,
   createRouter,
@@ -8,8 +10,9 @@ import {
 } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthContextProvider, useAuth, AuthContextType } from "./context";
+import { AuthContextProvider, useAuth } from "./context";
 import { Spinner } from "./components/Spinner";
+import "./axiosConfig";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +40,11 @@ declare module "@tanstack/react-router" {
 }
 function InnerApp() {
   const auth = useAuth();
-  return <RouterProvider router={router} context={{ queryClient, auth }} />;
+  return (
+    <Suspense fallback={<Spinner />}>
+      <RouterProvider router={router} context={{ queryClient, auth }} />
+    </Suspense>
+  );
 }
 function App() {
   return (

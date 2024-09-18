@@ -1,11 +1,15 @@
 import { createContext } from "react";
-import React, { useState } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
+
+import axios from "../axiosConfig";
 
 import { baseUrl } from "../consts";
 
 export interface AuthContextType {
   isAuthenticated: boolean;
   checkSessionStatus: () => Promise<void>;
+  isAuthenticating: boolean;
+  sessionStatus: "access" | "refresh" | "login";
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -16,46 +20,64 @@ export function AuthContextProvider({
   children: React.ReactNode;
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const checkSessionStatus = async () => {
-    //this is important to prevent infinite loop and making unnecessary requests, this is like cache for the session status.
-    if (isAuthenticated) return;
+  const [isAuthenticating, setIsAuthenticating] = useState<boolean>(true);
+  const [sessionStatus, setSessionStatus] = useState<
+    "access" | "refresh" | "login"
+  >("login");
+
+  const checkSessionStatus = useCallback(async () => {
+    setIsAuthenticating(true);
 
     try {
-      const response = await fetch(`${baseUrl}/session_status`, {
+      const response = await axios.get(`${baseUrl}/session_status`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
       });
 
-      const data = (await response.json()) as {
-        status: "access" | "refresh" | "login";
-      };
+      const data = response.data as { status: "access" | "refresh" | "login" };
 
-      if (response.status === 401 || data.status === "login") {
-        setIsAuthenticated(false);
-        window.location.href = "/auth/login";
+      console.log("data from status", data);
+
+      if (data.status === "access") {
+        setIsAuthenticated(true);
+        setSessionStatus("access");
       } else if (data.status === "refresh") {
         setIsAuthenticated(false);
-        window.location.href = "/auth/refresh";
+        setSessionStatus("refresh");
+        return;
+      } else if (data.status === "login") {
+        setIsAuthenticated(false);
+        setSessionStatus("login");
+        return;
       }
-
-      setIsAuthenticated(true);
     } catch (error) {
       setIsAuthenticated(false);
-      throw error;
+      setSessionStatus("login");
+      console.log(error);
+    } finally {
+      setIsAuthenticating(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    checkSessionStatus();
+  }, [checkSessionStatus]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, checkSessionStatus }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        checkSessionStatus,
+        sessionStatus,
+        isAuthenticating,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
+
 export function useAuth() {
-  const context = React.useContext(AuthContext);
+  const context = useContext(AuthContext);
 
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");

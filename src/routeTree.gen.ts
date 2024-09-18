@@ -141,18 +141,116 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  IndexRoute,
-  AuthedRoute: AuthedRoute.addChildren({
-    AuthedProfileRoute,
-    AuthedDashboardUrlidRoute,
-    AuthedDashboardCreateshorturlRoute,
-    AuthedDashboardIndexRoute,
-  }),
-  AuthLoginRoute,
-  AuthRefreshRoute,
-  AuthRegisterRoute,
-})
+interface AuthedRouteChildren {
+  AuthedProfileRoute: typeof AuthedProfileRoute
+  AuthedDashboardUrlidRoute: typeof AuthedDashboardUrlidRoute
+  AuthedDashboardCreateshorturlRoute: typeof AuthedDashboardCreateshorturlRoute
+  AuthedDashboardIndexRoute: typeof AuthedDashboardIndexRoute
+}
+
+const AuthedRouteChildren: AuthedRouteChildren = {
+  AuthedProfileRoute: AuthedProfileRoute,
+  AuthedDashboardUrlidRoute: AuthedDashboardUrlidRoute,
+  AuthedDashboardCreateshorturlRoute: AuthedDashboardCreateshorturlRoute,
+  AuthedDashboardIndexRoute: AuthedDashboardIndexRoute,
+}
+
+const AuthedRouteWithChildren =
+  AuthedRoute._addFileChildren(AuthedRouteChildren)
+
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '': typeof AuthedRouteWithChildren
+  '/profile': typeof AuthedProfileRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/refresh': typeof AuthRefreshRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/$url_id': typeof AuthedDashboardUrlidRoute
+  '/dashboard/create_short_url': typeof AuthedDashboardCreateshorturlRoute
+  '/dashboard': typeof AuthedDashboardIndexRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '': typeof AuthedRouteWithChildren
+  '/profile': typeof AuthedProfileRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/refresh': typeof AuthRefreshRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/dashboard/$url_id': typeof AuthedDashboardUrlidRoute
+  '/dashboard/create_short_url': typeof AuthedDashboardCreateshorturlRoute
+  '/dashboard': typeof AuthedDashboardIndexRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/_authed': typeof AuthedRouteWithChildren
+  '/_authed/profile': typeof AuthedProfileRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/refresh': typeof AuthRefreshRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/_authed/dashboard/$url_id': typeof AuthedDashboardUrlidRoute
+  '/_authed/dashboard/create_short_url': typeof AuthedDashboardCreateshorturlRoute
+  '/_authed/dashboard/': typeof AuthedDashboardIndexRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | ''
+    | '/profile'
+    | '/auth/login'
+    | '/auth/refresh'
+    | '/auth/register'
+    | '/dashboard/$url_id'
+    | '/dashboard/create_short_url'
+    | '/dashboard'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | ''
+    | '/profile'
+    | '/auth/login'
+    | '/auth/refresh'
+    | '/auth/register'
+    | '/dashboard/$url_id'
+    | '/dashboard/create_short_url'
+    | '/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authed'
+    | '/_authed/profile'
+    | '/auth/login'
+    | '/auth/refresh'
+    | '/auth/register'
+    | '/_authed/dashboard/$url_id'
+    | '/_authed/dashboard/create_short_url'
+    | '/_authed/dashboard/'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  AuthedRoute: typeof AuthedRouteWithChildren
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRefreshRoute: typeof AuthRefreshRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AuthedRoute: AuthedRouteWithChildren,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthRefreshRoute: AuthRefreshRoute,
+  AuthRegisterRoute: AuthRegisterRoute,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 

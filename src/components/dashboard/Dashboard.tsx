@@ -14,7 +14,7 @@ export default function DashboardMain({
   searchQueries: DashboardProps["searchQueries"];
 }) {
   return (
-    <div>
+    <div className="flex flex-col gap-10 md:gap-22 max-w-full">
       <Toast />
       <UrlFilterAndPagination
         currentCategory={searchQueries.category}
@@ -22,7 +22,7 @@ export default function DashboardMain({
         currentOffset={searchQueries.offset}
       />
 
-      <div className="grid gid-cols-1 md:grid-cols-3 gap-5 justify-items-center w-full">
+      <div className="grid gid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center w-full ">
         {urls["data"].map((url) => (
           <UrlCard
             key={url.id}

@@ -104,6 +104,9 @@ export default function UrlUpdater({ ...props }: UrlUpdaterProps) {
 
   return (
     <div className="container mx-auto">
+      {mutation.error?.toString() && (
+        <p className="text-red-500">{mutation.error.toString()}</p>
+      )}
       <div className="mt-4">
         <div className="flex flex-col align-start">
           <div

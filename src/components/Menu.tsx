@@ -6,7 +6,13 @@ interface Props {
   children: React.ReactNode;
 }
 
+import { searchParams } from "../consts";
+
+import { useAuth } from "../context";
+
 export default function Menu({ children }: Props) {
+  const auth = useAuth();
+
   return (
     <Navbar fluid rounded>
       <Navbar.Brand href="https://flowbite-react.com">
@@ -18,11 +24,24 @@ export default function Menu({ children }: Props) {
       </Navbar.Brand>
       <div className="flex md:order-2">
         <Link
-          to={"/dashboard"}
+          to={
+            auth.sessionStatus === "access"
+              ? "/dashboard"
+              : auth.sessionStatus === "refresh"
+                ? "/auth/refresh"
+                : "/auth/login"
+          }
           preload="intent"
           activeProps={{ className: `font-bold` }}
+          search={searchParams.search}
         >
-          <Button>Dashboard</Button>
+          <Button>
+            {auth.sessionStatus === "access"
+              ? "Dashboard"
+              : auth.sessionStatus === "refresh"
+                ? "Dashboard"
+                : "Login"}
+          </Button>
         </Link>
         <Navbar.Toggle />
       </div>
